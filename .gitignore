@@ -1,0 +1,19 @@
+# Virtual environment
+env/
+
+# macOS system files
+.DS_Store
+
+# Logs & temp files
+*.log
+*.tmp
+
+# Python cache
+**/__pycache__/
+*.py[cod]
+
+# VSCode settings
+.vscode/
+
+# Database (if you don't want to version it)
+db.sqlite3

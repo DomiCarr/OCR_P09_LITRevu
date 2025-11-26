@@ -1,0 +1,47 @@
+Generated 2025-11-26 22:12:20
+
+Listing all files and folders in '.' (excluding env/ and hidden files):
+
+./LITRevu
+    ./LITRevu/__init__.py
+    ./LITRevu/__pycache__
+        ./LITRevu/__pycache__/__init__.cpython-313.pyc
+        ./LITRevu/__pycache__/settings.cpython-313.pyc
+        ./LITRevu/__pycache__/urls.cpython-313.pyc
+        ./LITRevu/__pycache__/wsgi.cpython-313.pyc
+    ./LITRevu/asgi.py
+    ./LITRevu/settings.py
+    ./LITRevu/urls.py
+    ./LITRevu/wsgi.py
+./README.md
+./concat.sh
+./db.sqlite3
+./dir.sh
+./directories.txt
+./manage.py
+./reviews
+    ./reviews/__init__.py
+    ./reviews/__pycache__
+        ./reviews/__pycache__/__init__.cpython-313.pyc
+        ./reviews/__pycache__/admin.cpython-313.pyc
+        ./reviews/__pycache__/apps.cpython-313.pyc
+        ./reviews/__pycache__/models.cpython-313.pyc
+    ./reviews/admin.py
+    ./reviews/apps.py
+    ./reviews/migrations
+        ./reviews/migrations/__init__.py
+        ./reviews/migrations/__pycache__
+            ./reviews/migrations/__pycache__/__init__.cpython-313.pyc
+    ./reviews/models.py
+    ./reviews/templates
+        ./reviews/templates/reviews
+            ./reviews/templates/reviews/base.html
+            ./reviews/templates/reviews/feed.html
+            ./reviews/templates/reviews/review.html
+            ./reviews/templates/reviews/snippets
+                ./reviews/templates/reviews/snippets/review_snippet.html
+                ./reviews/templates/reviews/snippets/ticket_snippet.html
+            ./reviews/templates/reviews/ticket.html
+    ./reviews/tests.py
+    ./reviews/urls.py
+    ./reviews/views.py
