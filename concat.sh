@@ -15,12 +15,10 @@ exts=("py" "html" "css")
 
 # Loop through extensions
 for ext in $exts; do
-    find . -type f -name "*.$ext" | sort | while IFS= read -r f; do
-        echo "==============================================================================="#" >> \
-"$output_file"
+    find reviews -type f -name "*.$ext" | sort | while IFS= read -r f; do
+        echo "===============================================================================" >> "$output_file"
         echo "    $f " >> "$output_file"
-        echo "==============================================================================="#" >> \
-"$output_file"
+        echo "===============================================================================" >> "$output_file"
         cat "$f" >> "$output_file"
         echo "\n\n" >> "$output_file"
     done

@@ -1,4 +1,4 @@
-Generated 2025-11-26 22:12:20
+Generated 2025-11-27 00:02:12
 
 Listing all files and folders in '.' (excluding env/ and hidden files):
 
@@ -14,6 +14,7 @@ Listing all files and folders in '.' (excluding env/ and hidden files):
     ./LITRevu/urls.py
     ./LITRevu/wsgi.py
 ./README.md
+./code.txt
 ./concat.sh
 ./db.sqlite3
 ./dir.sh
@@ -26,22 +27,51 @@ Listing all files and folders in '.' (excluding env/ and hidden files):
         ./reviews/__pycache__/admin.cpython-313.pyc
         ./reviews/__pycache__/apps.cpython-313.pyc
         ./reviews/__pycache__/models.cpython-313.pyc
+        ./reviews/__pycache__/urls.cpython-313.pyc
     ./reviews/admin.py
     ./reviews/apps.py
+    ./reviews/forms
+        ./reviews/forms/__init__.py
+        ./reviews/forms/__pycache__
+            ./reviews/forms/__pycache__/__init__.cpython-313.pyc
+            ./reviews/forms/__pycache__/auth_forms.cpython-313.pyc
+            ./reviews/forms/__pycache__/combined_form.cpython-313.pyc
+            ./reviews/forms/__pycache__/review_form.cpython-313.pyc
+            ./reviews/forms/__pycache__/ticket_form.cpython-313.pyc
+        ./reviews/forms/auth_forms.py
+        ./reviews/forms/combined_form.py
+        ./reviews/forms/review_form.py
+        ./reviews/forms/ticket_form.py
     ./reviews/migrations
+        ./reviews/migrations/0001_initial.py
         ./reviews/migrations/__init__.py
         ./reviews/migrations/__pycache__
+            ./reviews/migrations/__pycache__/0001_initial.cpython-313.pyc
             ./reviews/migrations/__pycache__/__init__.cpython-313.pyc
     ./reviews/models.py
     ./reviews/templates
         ./reviews/templates/reviews
             ./reviews/templates/reviews/base.html
             ./reviews/templates/reviews/feed.html
+            ./reviews/templates/reviews/login.html
             ./reviews/templates/reviews/review.html
+            ./reviews/templates/reviews/signup.html
             ./reviews/templates/reviews/snippets
                 ./reviews/templates/reviews/snippets/review_snippet.html
                 ./reviews/templates/reviews/snippets/ticket_snippet.html
             ./reviews/templates/reviews/ticket.html
     ./reviews/tests.py
     ./reviews/urls.py
+    ./reviews/views
+        ./reviews/views/__init__.py
+        ./reviews/views/__pycache__
+            ./reviews/views/__pycache__/__init__.cpython-313.pyc
+            ./reviews/views/__pycache__/auth_view.cpython-313.pyc
+            ./reviews/views/__pycache__/feed_view.cpython-313.pyc
+        ./reviews/views/auth_view.py
+        ./reviews/views/combined_view.py
+        ./reviews/views/feed_view.py
+        ./reviews/views/follow_view.py
+        ./reviews/views/review_view.py
+        ./reviews/views/ticket_view.py
     ./reviews/views.py
