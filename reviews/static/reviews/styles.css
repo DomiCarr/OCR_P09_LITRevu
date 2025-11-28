@@ -1,0 +1,59 @@
+/* Center page content */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: white;
+}
+
+header {
+    text-align: center;
+    padding: 20px 0;
+    background: #fff;
+    border-bottom: 1px solid #ddd;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.login_window {
+    display: flex;
+    flex-direction: row;
+}
+
+.login_signup,
+.card {
+    background: #fff;
+    padding: 50px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.connection {
+    display: flex;
+    flex-direction: column;
+}
+
+.card h2 {
+    margin-top: 0;
+    text-align: center;
+}
+
+.btn {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background: #fff;
+    color: #000;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+p {
+    text-align: center;
+}

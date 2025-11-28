@@ -1,4 +1,4 @@
-Generated 2025-11-27 00:02:14
+Generated 2025-11-28 20:55:53
 
 
 
@@ -420,7 +420,30 @@ def logout_view(request):
 ===============================================================================
     reviews/templates/reviews/base.html 
 ===============================================================================
+{% load static %}
 
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>LITReview</title>
+    <link rel="stylesheet" href="{% static 'reviews/styles.css' %}">
+</head>
+
+<body>
+
+    <header>
+        <h1>LITReview</h1>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+</body>
+
+</html>
 
 
 ===============================================================================
@@ -435,13 +458,25 @@ def logout_view(request):
 {% extends "reviews/base.html" %}
 
 {% block content %}
-<h1>Login</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-</form>
-<a href="{% url 'signup' %}">Don't have an account? Sign up</a>
+<div class="login_window">
+
+    <div class="login_signup">
+        <p>Pas encore inscrit ?</p>
+        <a class="btn" href="{% url 'signup' %}">S'inscrire</a>
+    </div>
+
+    <div class="card">
+        <div class="connection">
+            <h2>Connectez-vous</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+            </form>
+        </div>
+        <button type="submit" class="btn">Se connecter</button>
+    </div>
+
+</div>
 {% endblock %}
 
 
@@ -483,5 +518,69 @@ def logout_view(request):
     reviews/templates/reviews/ticket.html 
 ===============================================================================
 
+
+
+===============================================================================
+    reviews/static/reviews/styles.css 
+===============================================================================
+/* Center page content */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: white;
+}
+
+header {
+    text-align: center;
+    padding: 20px 0;
+    background: #fff;
+    border-bottom: 1px solid #ddd;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.login_window {
+    display: flex;
+    flex-direction: row;
+}
+
+.login_signup,
+.card {
+    background: #fff;
+    padding: 50px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.connection {
+    display: flex;
+    flex-direction: column;
+}
+
+.card h2 {
+    margin-top: 0;
+    text-align: center;
+}
+
+.btn {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background: #fff;
+    color: #000;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+p {
+    text-align: center;
+}
 
 

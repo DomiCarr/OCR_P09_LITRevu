@@ -1,4 +1,4 @@
-Generated 2025-11-27 00:02:12
+Generated 2025-11-28 20:09:56
 
 Listing all files and folders in '.' (excluding env/ and hidden files):
 
@@ -15,6 +15,7 @@ Listing all files and folders in '.' (excluding env/ and hidden files):
     ./LITRevu/wsgi.py
 ./README.md
 ./code.txt
+./commit.sh
 ./concat.sh
 ./db.sqlite3
 ./dir.sh
@@ -49,6 +50,9 @@ Listing all files and folders in '.' (excluding env/ and hidden files):
             ./reviews/migrations/__pycache__/0001_initial.cpython-313.pyc
             ./reviews/migrations/__pycache__/__init__.cpython-313.pyc
     ./reviews/models.py
+    ./reviews/static
+        ./reviews/static/reviews
+            ./reviews/static/reviews/styles.css
     ./reviews/templates
         ./reviews/templates/reviews
             ./reviews/templates/reviews/base.html

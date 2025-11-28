@@ -2,6 +2,7 @@
 from django import forms
 from django.contrib.auth.models import User
 
+
 # -------------------------------------------------------------------
 # SignupForm: handles user registration
 # -------------------------------------------------------------------
@@ -28,6 +29,6 @@ class SignupForm(forms.ModelForm):
 # LoginForm: handles user login
 # -------------------------------------------------------------------
 class LoginForm(forms.Form):
-    # Username and password for authentication
-    username = forms.CharField()
-    password = forms.CharField(widget=forms.PasswordInput)
+    username = forms.CharField(label="Nom d'utilisateur")
+    password = forms.CharField(label="Mot de passe", widget=forms.PasswordInput)
+
