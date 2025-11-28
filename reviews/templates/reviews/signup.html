@@ -1,11 +1,17 @@
 {% extends "reviews/base.html" %}
 
 {% block content %}
-<h1>Sign Up</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Sign Up</button>
-</form>
-<a href="{% url 'login' %}">Already have an account? Login</a>
+<div class="signup_box">
+    <p>Inscrivez-vous</p>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <div class="signup_actions">
+            <a href="{% url 'login' %}" class="btn">Retourner</a>
+            <button type="submit" class="btn">S'inscrire</button>
+        </div>
+    </form>
+</div>
 {% endblock %}

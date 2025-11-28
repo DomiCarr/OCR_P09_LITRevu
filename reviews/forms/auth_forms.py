@@ -7,14 +7,18 @@ from django.contrib.auth.models import User
 # SignupForm: handles user registration
 # -------------------------------------------------------------------
 class SignupForm(forms.ModelForm):
-    # Password fields with password input widget
-    password = forms.CharField(widget=forms.PasswordInput)
-    password2 = forms.CharField(label="Confirm password", widget=forms.PasswordInput)
+    username = forms.CharField(label="Nom d'utilisateur")
+    password = forms.CharField(label="Mot de passe",
+                               widget=forms.PasswordInput)
+    password2 = forms.CharField(label="Confirmer le mot de passe",
+                                widget=forms.PasswordInput)
 
     class Meta:
         model = User
-        # Fields required for creating a new user
         fields = ['username', 'password', 'password2']
+        help_texts = {
+            'username': '',  # Remove Django default help text
+        }
 
     # Custom validation to ensure passwords match
     def clean(self):
@@ -22,7 +26,7 @@ class SignupForm(forms.ModelForm):
         password = cleaned_data.get("password")
         password2 = cleaned_data.get("password2")
         if password != password2:
-            raise forms.ValidationError("Passwords do not match")
+            raise forms.ValidationError("Les mots de passe ne correspondent pas.")
 
 
 # -------------------------------------------------------------------
@@ -30,5 +34,5 @@ class SignupForm(forms.ModelForm):
 # -------------------------------------------------------------------
 class LoginForm(forms.Form):
     username = forms.CharField(label="Nom d'utilisateur")
-    password = forms.CharField(label="Mot de passe", widget=forms.PasswordInput)
-
+    password = forms.CharField(label="Mot de passe",
+                               widget=forms.PasswordInput)
