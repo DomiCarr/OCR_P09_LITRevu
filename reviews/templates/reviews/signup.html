@@ -1,17 +1,23 @@
 {% extends "reviews/base.html" %}
+{% block title %}LITReview - Signup{% endblock %}
 
 {% block content %}
 <div class="signup_box">
-    <p>Inscrivez-vous</p>
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
+    <!-- Bloc vertical : titre + champs -->
+    <div class="signup_fields">
+        <p>Inscrivez-vous</p>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
 
-        <div class="signup_actions">
-            <a href="{% url 'login' %}" class="btn">Retourner</a>
-            <button type="submit" class="btn">S'inscrire</button>
-        </div>
-    </form>
+            <!-- Bloc horizontal : actions -->
+            <div class="signup_actions">
+                <a href="{% url 'login' %}" class="btn">Retourner</a>
+                <button type="submit" class="btn">S'inscrire</button>
+            </div>
+        </form>
+    </div>
+
 </div>
 {% endblock %}
