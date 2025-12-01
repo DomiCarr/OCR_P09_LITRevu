@@ -1,17 +1,18 @@
 {% extends "reviews/base.html" %}
+
 {% block title %}LITReview - Login{% endblock %}
 
 {% block content %}
 <div class="login_window">
 
     <div class="login_signup">
-        <p>Inscrivez-vous maintenant</p>
+        <div class="tit_box">Inscrivez-vous maintenant</div>
         <a class="btn" href="{% url 'signup' %}">S'inscrire</a>
     </div>
 
     <div class="card">
         <div class="connection">
-            <p>Connectez-vous</p>
+            <iv class="tit_box">Connectez-vous</iv>
             <form method="post">
                 {% csrf_token %}
                 {{ form.as_p }}

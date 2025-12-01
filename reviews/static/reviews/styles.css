@@ -14,13 +14,7 @@ h2 {
     font-weight: normal;
 }
 
-/* Paragraphs */
-p {
-    text-align: center;
-    font-weight: normal;
-    font-size: 16px;
-    /* cohérent login + signup */
-}
+
 
 /* Buttons */
 .btn {
@@ -49,6 +43,16 @@ main {
     display: flex;
     justify-content: center;
     margin-top: 40px;
+}
+
+/* --------------------------
+   Auth box title
+--------------------------- */
+.tit_box {
+    text-align: center;
+    font-weight: normal;
+    font-size: 16px;
+    /* cohérent login + signup */
 }
 
 /* --------------------------
@@ -104,4 +108,39 @@ main {
     flex-direction: row;
     gap: 10px;
     margin-top: 20px;
+}
+
+
+/* --------------------------
+   Publications
+--------------------------- */
+.page {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.pub_line {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 80%;
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    margin: 10px;
+}
+
+.pub_desc {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 60%;
+}
+
+.pub_desc p {
+    margin-left: 0;
+    text-align: left;
 }

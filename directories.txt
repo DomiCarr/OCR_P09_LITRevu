@@ -1,4 +1,4 @@
-Generated 2025-11-28 20:09:56
+Generated 2025-12-01 16:32:25
 
 Listing all files and folders in '.' (excluding env/ and hidden files):
 
@@ -13,10 +13,11 @@ Listing all files and folders in '.' (excluding env/ and hidden files):
     ./LITRevu/settings.py
     ./LITRevu/urls.py
     ./LITRevu/wsgi.py
-./README.md
 ./code.txt
 ./commit.sh
 ./concat.sh
+./data
+    ./data/publications.json
 ./db.sqlite3
 ./dir.sh
 ./directories.txt
@@ -31,6 +32,8 @@ Listing all files and folders in '.' (excluding env/ and hidden files):
         ./reviews/__pycache__/urls.cpython-313.pyc
     ./reviews/admin.py
     ./reviews/apps.py
+    ./reviews/data
+        ./reviews/data/publications.json
     ./reviews/forms
         ./reviews/forms/__init__.py
         ./reviews/forms/__pycache__
@@ -45,9 +48,11 @@ Listing all files and folders in '.' (excluding env/ and hidden files):
         ./reviews/forms/ticket_form.py
     ./reviews/migrations
         ./reviews/migrations/0001_initial.py
+        ./reviews/migrations/0002_publication.py
         ./reviews/migrations/__init__.py
         ./reviews/migrations/__pycache__
             ./reviews/migrations/__pycache__/0001_initial.cpython-313.pyc
+            ./reviews/migrations/__pycache__/0002_publication.cpython-313.pyc
             ./reviews/migrations/__pycache__/__init__.cpython-313.pyc
     ./reviews/models.py
     ./reviews/static
@@ -58,6 +63,7 @@ Listing all files and folders in '.' (excluding env/ and hidden files):
             ./reviews/templates/reviews/base.html
             ./reviews/templates/reviews/feed.html
             ./reviews/templates/reviews/login.html
+            ./reviews/templates/reviews/publication_list.html
             ./reviews/templates/reviews/review.html
             ./reviews/templates/reviews/signup.html
             ./reviews/templates/reviews/snippets
@@ -72,10 +78,13 @@ Listing all files and folders in '.' (excluding env/ and hidden files):
             ./reviews/views/__pycache__/__init__.cpython-313.pyc
             ./reviews/views/__pycache__/auth_view.cpython-313.pyc
             ./reviews/views/__pycache__/feed_view.cpython-313.pyc
+            ./reviews/views/__pycache__/publication_view.cpython-313.pyc
+            ./reviews/views/__pycache__/ticket_view.cpython-313.pyc
         ./reviews/views/auth_view.py
         ./reviews/views/combined_view.py
         ./reviews/views/feed_view.py
         ./reviews/views/follow_view.py
+        ./reviews/views/publication_view.py
         ./reviews/views/review_view.py
         ./reviews/views/ticket_view.py
     ./reviews/views.py

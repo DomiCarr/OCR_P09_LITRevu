@@ -81,3 +81,27 @@ class UserFollows(models.Model):
     # Human-readable representation of a UserFollows instance
     def __str__(self):
         return f"{self.user} follows {self.followed_user}"
+
+
+# -------------------------------------------------------------------
+# Publication model represents a book or an article
+# -------------------------------------------------------------------
+class Publication(models.Model):
+    BOOK = "Book"
+    ARTICLE = "Article"
+    PUB_TYPES = [
+        (BOOK, "Book"),
+        (ARTICLE, "Article"),
+    ]
+
+    title = models.CharField(max_length=256)
+    author = models.CharField(max_length=128)
+    pub_type = models.CharField(max_length=10, choices=PUB_TYPES)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    image = models.URLField(
+        default="https://dummyimage.com/150x150/cccccc/000000.png&text=No+Image"
+    )
+    time_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.title} ({self.pub_type})"

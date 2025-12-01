@@ -1,0 +1,26 @@
+{% extends "reviews/base.html" %}
+
+{% block title %}LITReview - Publications{% endblock %}
+
+{% block content %}
+<div class="page">
+    <h1>Publications</h1>
+    <div class="page_content">
+        {% for pub in publications %}
+        <div class="pub_line">
+            <div class="pub_desc">
+                <p>Id: {{ pub.id }}</p>
+                <p>Title: {{ pub.title }}</p>
+                <p>Author: {{ pub.author }}</p>
+                <p>Type: {{ pub.pub_type }}</p>
+            </div>
+            <div class="pub_img">
+                <img src="{{ pub.image }}" alt="{{ pub.title }}" width="150">
+            </div>
+        </div>
+        {% empty %}
+        <p>Aucune publication pour l'instant.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
