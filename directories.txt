@@ -1,14 +1,11 @@
-Generated 2025-12-01 16:32:25
+Generated 2025-12-02 09:25:31
 
-Listing all files and folders in '.' (excluding env/ and hidden files):
+Listing all files and folders in '.' (excluding env/, hidden files, and __pycache__):
 
+./590041622_1336643951593883_3658266628288774026_n.jpg
+./590041622_1336643951593883_3658266628288774026_n_mF6HvP8.jpg
 ./LITRevu
     ./LITRevu/__init__.py
-    ./LITRevu/__pycache__
-        ./LITRevu/__pycache__/__init__.cpython-313.pyc
-        ./LITRevu/__pycache__/settings.cpython-313.pyc
-        ./LITRevu/__pycache__/urls.cpython-313.pyc
-        ./LITRevu/__pycache__/wsgi.cpython-313.pyc
     ./LITRevu/asgi.py
     ./LITRevu/settings.py
     ./LITRevu/urls.py
@@ -24,24 +21,10 @@ Listing all files and folders in '.' (excluding env/ and hidden files):
 ./manage.py
 ./reviews
     ./reviews/__init__.py
-    ./reviews/__pycache__
-        ./reviews/__pycache__/__init__.cpython-313.pyc
-        ./reviews/__pycache__/admin.cpython-313.pyc
-        ./reviews/__pycache__/apps.cpython-313.pyc
-        ./reviews/__pycache__/models.cpython-313.pyc
-        ./reviews/__pycache__/urls.cpython-313.pyc
     ./reviews/admin.py
     ./reviews/apps.py
-    ./reviews/data
-        ./reviews/data/publications.json
     ./reviews/forms
         ./reviews/forms/__init__.py
-        ./reviews/forms/__pycache__
-            ./reviews/forms/__pycache__/__init__.cpython-313.pyc
-            ./reviews/forms/__pycache__/auth_forms.cpython-313.pyc
-            ./reviews/forms/__pycache__/combined_form.cpython-313.pyc
-            ./reviews/forms/__pycache__/review_form.cpython-313.pyc
-            ./reviews/forms/__pycache__/ticket_form.cpython-313.pyc
         ./reviews/forms/auth_forms.py
         ./reviews/forms/combined_form.py
         ./reviews/forms/review_form.py
@@ -49,11 +32,8 @@ Listing all files and folders in '.' (excluding env/ and hidden files):
     ./reviews/migrations
         ./reviews/migrations/0001_initial.py
         ./reviews/migrations/0002_publication.py
+        ./reviews/migrations/0003_alter_publication_image.py
         ./reviews/migrations/__init__.py
-        ./reviews/migrations/__pycache__
-            ./reviews/migrations/__pycache__/0001_initial.cpython-313.pyc
-            ./reviews/migrations/__pycache__/0002_publication.cpython-313.pyc
-            ./reviews/migrations/__pycache__/__init__.cpython-313.pyc
     ./reviews/models.py
     ./reviews/static
         ./reviews/static/reviews
@@ -74,12 +54,6 @@ Listing all files and folders in '.' (excluding env/ and hidden files):
     ./reviews/urls.py
     ./reviews/views
         ./reviews/views/__init__.py
-        ./reviews/views/__pycache__
-            ./reviews/views/__pycache__/__init__.cpython-313.pyc
-            ./reviews/views/__pycache__/auth_view.cpython-313.pyc
-            ./reviews/views/__pycache__/feed_view.cpython-313.pyc
-            ./reviews/views/__pycache__/publication_view.cpython-313.pyc
-            ./reviews/views/__pycache__/ticket_view.cpython-313.pyc
         ./reviews/views/auth_view.py
         ./reviews/views/combined_view.py
         ./reviews/views/feed_view.py

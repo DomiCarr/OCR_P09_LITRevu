@@ -8,7 +8,7 @@ rm -f "$output_file"
 
 # Header
 echo "Generated $(date '+%Y-%m-%d %H:%M:%S')" >> "$output_file"
-echo "\nListing all files and folders in '.' (excluding env/ and hidden files):\n" >> "$output_file"
+echo "\nListing all files and folders in '.' (excluding env/, hidden files, and __pycache__):\n" >> "$output_file"
 
 # Recursive function
 print_tree() {
@@ -16,9 +16,10 @@ print_tree() {
     local indent="$2"
 
     for f in "$dir"/*; do
-        # Skip hidden files and env folder
+        # Skip hidden files, env folder, and __pycache__
         [[ "$(basename "$f")" == .* ]] && continue
         [[ "$(basename "$f")" == "env" ]] && continue
+        [[ "$(basename "$f")" == "__pycache__" ]] && continue
 
         # Print file or folder
         echo "${indent}$f" >> "$output_file"

@@ -1,25 +1,29 @@
+<!-- reviews/templates/reviews/ticket.html -->
 {% extends "reviews/base.html" %}
 
-{% block title %}LITReview - Login{% endblock %}
+{% block title %}
+{% if form.instance.pk %}
+LITReview - Update Ticket
+{% else %}
+LITReview - Create Ticket
+{% endif %}
+{% endblock %}
 
 {% block content %}
-<div class="login_window">
+<div class="ticket_box">
+    <h2>{% if form.instance.pk %}Update Ticket{% else %}Create a new ticket{% endif %}</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
 
-    <div class="login_signup">
-        <div class="tit_box">Inscrivez-vous maintenant</div>
-        <a class="btn" href="{% url 'signup' %}">S'inscrire</a>
-    </div>
+        {% if form.instance.image %}
+        <p>Current image:</p>
+        <img src="{{ form.instance.image.url }}" alt="Ticket image" width="200">
+        {% endif %}
 
-    <div class="card">
-        <div class="connection">
-            <iv class="tit_box">Connectez-vous</iv>
-            <form method="post">
-                {% csrf_token %}
-                {{ form.as_p }}
-            </form>
-        </div>
-        <button type="submit" class="btn">Se connecter</button>
-    </div>
-
+        <button type="submit" class="btn">
+            {% if form.instance.pk %}Update{% else %}Create{% endif %}
+        </button>
+    </form>
 </div>
 {% endblock %}
