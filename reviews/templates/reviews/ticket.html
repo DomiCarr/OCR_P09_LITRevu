@@ -1,12 +1,14 @@
-{# Script: ticket_create.html #}
 {% extends "reviews/base.html" %}
 {% load static %}
 
-{% block title %}Create Ticket{% endblock %}
+{% block title %}
+{% if edit_mode %}Modifier un billet{% else %}Créer un billet{% endif %}
+{% endblock %}
 
 {% block content %}
 <div class="ticket_box">
-    <h2>Créer un billet</h2>
+    <h2>{% if edit_mode %}Modifier un billet{% else %}Créer un billet{% endif %}</h2>
+
     <form method="post" enctype="multipart/form-data" id="ticketForm">
         {% csrf_token %}
 
@@ -16,18 +18,18 @@
         <p>Description:</p>
         {{ form.description }}
 
-        {# Image preview (hidden initially, visible after selecting file) #}
-        <img id="imagePreview" width="200" style="display:none;" alt="Preview">
+        <img id="imagePreview" width="200" {% if edit_mode and ticket.image %} src="{{ ticket.image.url }}"
+            style="display:block;" {% else %} style="display:none;" {% endif %} alt="Preview">
 
         <input type="file" id="id_image" name="image" style="display:none;">
         <label for="id_image" class="btn">Télécharger Fichier</label>
 
         <br><br>
-        {# Submit button disabled until all fields are filled #}
-        <button type="submit" class="btn" id="submitBtn">Envoyer</button>
+        <button type="submit" class="btn">
+            {% if edit_mode %}Modifier{% else %}Créer{% endif %}
+        </button>
     </form>
 </div>
 
-{# External JS: preview + enable submit button when form complete #}
 <script src="{% static 'reviews/js/ticket_preview.js' %}"></script>
 {% endblock %}

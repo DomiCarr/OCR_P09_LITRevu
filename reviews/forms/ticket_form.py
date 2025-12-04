@@ -1,13 +1,13 @@
 from django import forms
 from reviews.models import Ticket
 
-class TicketForm(forms.ModelForm):
-    """Form used to create or edit a ticket."""
 
+class TicketForm(forms.ModelForm):
     class Meta:
         model = Ticket
-        fields = ["title", "description", "image"]
+        fields = ['title', 'description', 'image']
         widgets = {
-            "title": forms.TextInput(attrs={"class": "input"}),
-            "description": forms.Textarea(attrs={"class": "textarea"}),
+            'title': forms.TextInput(attrs={'id': 'title'}),
+            'description': forms.Textarea(attrs={'id': 'description'}),
+            'image': forms.FileInput(attrs={'id': 'id_image', 'style': 'display:none;'}),
         }

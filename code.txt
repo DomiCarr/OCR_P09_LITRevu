@@ -1,4 +1,4 @@
-Generated 2025-12-02 17:46:39
+Generated 2025-12-04 17:08:22
 
 
 
@@ -12,17 +12,39 @@ Generated 2025-12-02 17:46:39
     reviews/admin.py 
 ===============================================================================
 from django.contrib import admin
-from .models import Publication
-from .models import Ticket
+from .models import Publication, Ticket, Review, UserFollows
 
-
+# -------------------------------------------------------------------
+# Publication admin
+# -------------------------------------------------------------------
 @admin.register(Publication)
 class PublicationAdmin(admin.ModelAdmin):
     list_display = ("title", "author", "pub_type", "user", "time_created")
 
+# -------------------------------------------------------------------
+# Ticket admin
+# -------------------------------------------------------------------
 @admin.register(Ticket)
 class TicketAdmin(admin.ModelAdmin):
     list_display = ("title", "user", "time_created")
+
+# -------------------------------------------------------------------
+# Review admin
+# -------------------------------------------------------------------
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ("headline", "ticket", "user", "rating", "time_created")
+    list_filter = ("rating", "time_created")
+    search_fields = ("headline", "body", "user__username", "ticket__title")
+
+# -------------------------------------------------------------------
+# UserFollows admin
+# -------------------------------------------------------------------
+@admin.register(UserFollows)
+class UserFollowsAdmin(admin.ModelAdmin):
+    list_display = ("user", "followed_user")
+    search_fields = ("user__username", "followed_user__username")
+
 
 
 ===============================================================================
@@ -117,15 +139,15 @@ class ReviewForm(forms.ModelForm):
 from django import forms
 from reviews.models import Ticket
 
-class TicketForm(forms.ModelForm):
-    """Form used to create or edit a ticket."""
 
+class TicketForm(forms.ModelForm):
     class Meta:
         model = Ticket
-        fields = ["title", "description", "image"]
+        fields = ['title', 'description', 'image']
         widgets = {
-            "title": forms.TextInput(attrs={"class": "input"}),
-            "description": forms.Textarea(attrs={"class": "textarea"}),
+            'title': forms.TextInput(attrs={'id': 'title'}),
+            'description': forms.Textarea(attrs={'id': 'description'}),
+            'image': forms.FileInput(attrs={'id': 'id_image', 'style': 'display:none;'}),
         }
 
 
@@ -419,8 +441,8 @@ urlpatterns = [
     path('signup/', signup_view, name='signup'),
     path('logout/', logout_view, name='logout'),
     path('publications/', list_publications, name='publication_list'),
-    path('tickets/new/', create_ticket, name='create_ticket'),
-    path('tickets/update/<int:ticket_id>/', update_ticket, name='update_ticket'),
+    path('tickets/new/', create_ticket, name='ticket_create'),
+    path('tickets/update/<int:ticket_id>/', update_ticket, name='ticket_update'),
     path('feed/', feed_view, name='feed'),
 ]
 
@@ -585,6 +607,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from reviews.forms.ticket_form import TicketForm
 from reviews.models import Ticket
 
+
 # -------------------------------------------------------------------
 # Create ticket view
 # -------------------------------------------------------------------
@@ -604,18 +627,13 @@ def create_ticket(request):
     else:
         form = TicketForm()
 
-    return render(request, "reviews/ticket_create.html", {"form": form})
+    return render(request, "reviews/ticket.html", {
+        "form": form,
+        "mode": "create",
+    })
 
 
-# -------------------------------------------------------------------
-# Update ticket view
-# -------------------------------------------------------------------
 def update_ticket(request, ticket_id):
-    """
-    Update an existing ticket.
-    GET: display form prefilled with ticket data
-    POST: validate and save changes
-    """
     ticket = get_object_or_404(Ticket, id=ticket_id)
 
     if request.method == "POST":
@@ -626,9 +644,11 @@ def update_ticket(request, ticket_id):
     else:
         form = TicketForm(instance=ticket)
 
-    return render(request, "reviews/ticket_update.html", {"form": form, "ticket": ticket})
-
-
+    return render(request, "reviews/ticket.html", {
+        "form": form,
+        "ticket": ticket,
+        "edit_mode": True,  # booléen pour template
+    })
 
 
 ===============================================================================
@@ -763,63 +783,18 @@ def update_ticket(request, ticket_id):
 
 
 ===============================================================================
-    reviews/templates/reviews/snippets/review_snippet.html 
-===============================================================================
-
-
-
-===============================================================================
-    reviews/templates/reviews/snippets/ticket_snippet.html 
-===============================================================================
-
-
-
-===============================================================================
-    reviews/templates/reviews/ticket_create.html 
+    reviews/templates/reviews/ticket.html 
 ===============================================================================
 {% extends "reviews/base.html" %}
 {% load static %}
 
-{% block title %}Créer un billet{% endblock %}
-
-{% block content %}
-<div class="ticket_box">
-    <h2>Créer un billet</h2>
-    <form method="post" enctype="multipart/form-data" id="ticketForm">
-        {% csrf_token %}
-        <p>Titre:</p>
-        {{ form.title }}
-
-        <p>Description:</p>
-        {{ form.description }}
-
-        <!-- Image upload -->
-        <img id="imagePreview" width="200" style="display:none;" alt="Preview">
-        <input type="file" id="id_image" name="image" style="display:none;">
-        <label for="id_image" class="btn">Télécharger fichier</label>
-
-
-
-        <br><br>
-        <button type="submit" class="btn">Envoyer</button>
-    </form>
-</div>
-
-<script src="{% static 'reviews/js/preview_image.js' %}"></script>
+{% block title %}
+{% if edit_mode %}Modifier un billet{% else %}Créer un billet{% endif %}
 {% endblock %}
 
-
-===============================================================================
-    reviews/templates/reviews/ticket_update.html 
-===============================================================================
-{% extends "reviews/base.html" %}
-{% load static %}
-
-{% block title %}Modifier un billet{% endblock %}
-
 {% block content %}
 <div class="ticket_box">
-    <h2>Modifier un billet</h2>
+    <h2>{% if edit_mode %}Modifier un billet{% else %}Créer un billet{% endif %}</h2>
 
     <form method="post" enctype="multipart/form-data" id="ticketForm">
         {% csrf_token %}
@@ -830,18 +805,20 @@ def update_ticket(request, ticket_id):
         <p>Description:</p>
         {{ form.description }}
 
-        <img id="imagePreview" width="200" {% if not form.instance.image %}style="display:none;" {% endif %}
-            src="{% if form.instance.image %}{{ form.instance.image.url }}{% endif %}" alt="Preview">
+        <img id="imagePreview" width="200" {% if edit_mode and ticket.image %} src="{{ ticket.image.url }}"
+            style="display:block;" {% else %} style="display:none;" {% endif %} alt="Preview">
 
         <input type="file" id="id_image" name="image" style="display:none;">
-        <label for="id_image" class="btn">Changer l’image</label>
+        <label for="id_image" class="btn">Télécharger Fichier</label>
 
         <br><br>
-        <button type="submit" class="btn">Mettre à jour</button>
+        <button type="submit" class="btn">
+            {% if edit_mode %}Modifier{% else %}Créer{% endif %}
+        </button>
     </form>
 </div>
 
-<script src="{% static 'reviews/js/preview_image.js' %}"></script>
+<script src="{% static 'reviews/js/ticket_preview.js' %}"></script>
 {% endblock %}
 
 
@@ -871,16 +848,23 @@ h2 {
     width: 100%;
     padding: 10px;
     margin-top: 10px;
-    background: #fff;
-    color: #000;
+    background: #007bff;
+    color: #fff;
     border: 1px solid #ccc;
     border-radius: 4px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
-    /* cohérent login + signup */
+    transition: background 0.2s;
+    cursor: pointer;
 }
+
+.btn:disabled {
+    background: #fff;
+    color: #000;
+}
+
 
 /* Layout wrappers */
 header {

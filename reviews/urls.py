@@ -12,8 +12,8 @@ urlpatterns = [
     path('signup/', signup_view, name='signup'),
     path('logout/', logout_view, name='logout'),
     path('publications/', list_publications, name='publication_list'),
-    path('tickets/new/', create_ticket, name='create_ticket'),
-    path('tickets/update/<int:ticket_id>/', update_ticket, name='update_ticket'),
+    path('tickets/new/', create_ticket, name='ticket_create'),
+    path('tickets/update/<int:ticket_id>/', update_ticket, name='ticket_update'),
     path('feed/', feed_view, name='feed'),
 ]
 

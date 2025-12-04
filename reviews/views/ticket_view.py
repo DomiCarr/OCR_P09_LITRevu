@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from reviews.forms.ticket_form import TicketForm
 from reviews.models import Ticket
 
+
 # -------------------------------------------------------------------
 # Create ticket view
 # -------------------------------------------------------------------
@@ -22,18 +23,13 @@ def create_ticket(request):
     else:
         form = TicketForm()
 
-    return render(request, "reviews/ticket_create.html", {"form": form})
+    return render(request, "reviews/ticket.html", {
+        "form": form,
+        "mode": "create",
+    })
 
 
-# -------------------------------------------------------------------
-# Update ticket view
-# -------------------------------------------------------------------
 def update_ticket(request, ticket_id):
-    """
-    Update an existing ticket.
-    GET: display form prefilled with ticket data
-    POST: validate and save changes
-    """
     ticket = get_object_or_404(Ticket, id=ticket_id)
 
     if request.method == "POST":
@@ -44,5 +40,8 @@ def update_ticket(request, ticket_id):
     else:
         form = TicketForm(instance=ticket)
 
-    return render(request, "reviews/ticket_update.html", {"form": form, "ticket": ticket})
-
+    return render(request, "reviews/ticket.html", {
+        "form": form,
+        "ticket": ticket,
+        "edit_mode": True,  # booléen pour template
+    })
