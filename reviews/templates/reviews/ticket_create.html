@@ -1,30 +1,33 @@
+{# Script: ticket_create.html #}
 {% extends "reviews/base.html" %}
 {% load static %}
 
-{% block title %}Créer un billet{% endblock %}
+{% block title %}Create Ticket{% endblock %}
 
 {% block content %}
 <div class="ticket_box">
     <h2>Créer un billet</h2>
     <form method="post" enctype="multipart/form-data" id="ticketForm">
         {% csrf_token %}
+
         <p>Titre:</p>
         {{ form.title }}
 
         <p>Description:</p>
         {{ form.description }}
 
-        <!-- Image upload -->
+        {# Image preview (hidden initially, visible after selecting file) #}
         <img id="imagePreview" width="200" style="display:none;" alt="Preview">
+
         <input type="file" id="id_image" name="image" style="display:none;">
-        <label for="id_image" class="btn">Télécharger fichier</label>
-
-
+        <label for="id_image" class="btn">Télécharger Fichier</label>
 
         <br><br>
-        <button type="submit" class="btn">Envoyer</button>
+        {# Submit button disabled until all fields are filled #}
+        <button type="submit" class="btn" id="submitBtn">Envoyer</button>
     </form>
 </div>
 
-<script src="{% static 'reviews/js/preview_image.js' %}"></script>
+{# External JS: preview + enable submit button when form complete #}
+<script src="{% static 'reviews/js/ticket_preview.js' %}"></script>
 {% endblock %}

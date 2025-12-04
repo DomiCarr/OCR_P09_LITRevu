@@ -21,16 +21,23 @@ h2 {
     width: 100%;
     padding: 10px;
     margin-top: 10px;
-    background: #fff;
-    color: #000;
+    background: #007bff;
+    color: #fff;
     border: 1px solid #ccc;
     border-radius: 4px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
-    /* cohérent login + signup */
+    transition: background 0.2s;
+    cursor: pointer;
 }
+
+.btn:disabled {
+    background: #fff;
+    color: #000;
+}
+
 
 /* Layout wrappers */
 header {

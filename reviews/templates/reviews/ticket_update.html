@@ -1,3 +1,4 @@
+{# Script: ticket_update.html #}
 {% extends "reviews/base.html" %}
 {% load static %}
 
@@ -6,7 +7,6 @@
 {% block content %}
 <div class="ticket_box">
     <h2>Modifier un billet</h2>
-
     <form method="post" enctype="multipart/form-data" id="ticketForm">
         {% csrf_token %}
 
@@ -17,15 +17,8 @@
         {{ form.description }}
 
         {# Image preview (visible only if the post already has an image) #}
-        <img id="imagePreview" width="200" {# If the post has no image -> hide the <img> element #}
-        {% if not form.instance.image %}style="display:none;"{% endif %}
-
-        {# If the post has an image -> set its URL into src #}
-        src="{% if form.instance.image %}{{ form.instance.image.url }}{% endif %}"
-
-        alt="Preview"
-        />
-
+        <img id="imagePreview" width="200" {% if not form.instance.image %}style="display:none;" {% endif %}
+            src="{% if form.instance.image %}{{ form.instance.image.url }}{% endif %}" alt="Preview" />
 
         <input type="file" id="id_image" name="image" style="display:none;">
         <label for="id_image" class="btn">Changer l’image</label>
