@@ -1,0 +1,39 @@
+{% extends "reviews/base.html" %}
+{% load static %}
+
+{% block title %}Modifier un billet{% endblock %}
+
+{% block content %}
+<div class="ticket_box">
+    <h2>Modifier un billet</h2>
+
+    <form method="post" enctype="multipart/form-data" id="ticketForm">
+        {% csrf_token %}
+
+        <p>Titre:</p>
+        {{ form.title }}
+
+        <p>Description:</p>
+        {{ form.description }}
+
+        {# Image preview (visible only if the post already has an image) #}
+        <img id="imagePreview" width="200" {# If the post has no image -> hide the <img> element #}
+        {% if not form.instance.image %}style="display:none;"{% endif %}
+
+        {# If the post has an image -> set its URL into src #}
+        src="{% if form.instance.image %}{{ form.instance.image.url }}{% endif %}"
+
+        alt="Preview"
+        />
+
+
+        <input type="file" id="id_image" name="image" style="display:none;">
+        <label for="id_image" class="btn">Changer l’image</label>
+
+        <br><br>
+        <button type="submit" class="btn">Mettre à jour</button>
+    </form>
+</div>
+
+<script src="{% static 'reviews/js/preview_image.js' %}"></script>
+{% endblock %}

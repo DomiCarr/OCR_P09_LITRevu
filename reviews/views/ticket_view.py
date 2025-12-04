@@ -16,16 +16,13 @@ def create_ticket(request):
         form = TicketForm(request.POST, request.FILES)
         if form.is_valid():
             ticket = form.save(commit=False)
-            ticket.user = request.user  # assign logged-in user
+            ticket.user = request.user
             ticket.save()
-            return redirect("feed")  # redirect after creation
+            return redirect("feed")
     else:
         form = TicketForm()
 
-    return render(request, "reviews/ticket.html", {
-        "form": form,
-        "is_update": False
-        })
+    return render(request, "reviews/ticket_create.html", {"form": form})
 
 
 # -------------------------------------------------------------------
@@ -43,12 +40,9 @@ def update_ticket(request, ticket_id):
         form = TicketForm(request.POST, request.FILES, instance=ticket)
         if form.is_valid():
             form.save()
-            return redirect("feed")  # redirect after update
+            return redirect("feed")
     else:
-        form = TicketForm(instance=ticket)  # prefill with existing data
+        form = TicketForm(instance=ticket)
 
-    return render(request, "reviews/ticket.html", {
-        "form": form,
-        "is_update": True,
-        "ticket": ticket
-    })
+    return render(request, "reviews/ticket_update.html", {"form": form, "ticket": ticket})
+

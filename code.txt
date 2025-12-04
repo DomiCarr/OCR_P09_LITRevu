@@ -1,4 +1,4 @@
-Generated 2025-12-02 09:43:11
+Generated 2025-12-02 17:46:39
 
 
 
@@ -405,10 +405,13 @@ from django.test import TestCase
 ===============================================================================
     reviews/urls.py 
 ===============================================================================
+# reviews/urls.py
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 from .views.auth_view import login_view, signup_view, logout_view
 from .views.publication_view import list_publications
-from reviews.views.ticket_view import create_ticket, edit_ticket
+from reviews.views.ticket_view import create_ticket, update_ticket
 from reviews.views.feed_view import feed_view
 
 urlpatterns = [
@@ -417,9 +420,13 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('publications/', list_publications, name='publication_list'),
     path('tickets/new/', create_ticket, name='create_ticket'),
-    path('tickets/edit/<int:ticket_id>/', edit_ticket, name='edit_ticket'),
+    path('tickets/update/<int:ticket_id>/', update_ticket, name='update_ticket'),
     path('feed/', feed_view, name='feed'),
 ]
+
+# Serve uploaded media files during development
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
 
@@ -578,7 +585,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 from reviews.forms.ticket_form import TicketForm
 from reviews.models import Ticket
 
-
 # -------------------------------------------------------------------
 # Create ticket view
 # -------------------------------------------------------------------
@@ -592,23 +598,23 @@ def create_ticket(request):
         form = TicketForm(request.POST, request.FILES)
         if form.is_valid():
             ticket = form.save(commit=False)
-            ticket.user = request.user  # assign logged-in user
+            ticket.user = request.user
             ticket.save()
-            return redirect("feed")  # redirect after creation
+            return redirect("feed")
     else:
         form = TicketForm()
 
-    return render(request, "reviews/ticket.html", {"form": form})
+    return render(request, "reviews/ticket_create.html", {"form": form})
 
 
 # -------------------------------------------------------------------
-# Edit ticket
+# Update ticket view
 # -------------------------------------------------------------------
-def edit_ticket(request, ticket_id):
+def update_ticket(request, ticket_id):
     """
-    Edit an existing ticket.
-    GET: display form prefilled with ticket data.
-    POST: validate and save changes.
+    Update an existing ticket.
+    GET: display form prefilled with ticket data
+    POST: validate and save changes
     """
     ticket = get_object_or_404(Ticket, id=ticket_id)
 
@@ -616,11 +622,13 @@ def edit_ticket(request, ticket_id):
         form = TicketForm(request.POST, request.FILES, instance=ticket)
         if form.is_valid():
             form.save()
-            return redirect("feed")  # redirect after editing
+            return redirect("feed")
     else:
-        form = TicketForm(instance=ticket)  # prefill with existing data
+        form = TicketForm(instance=ticket)
 
-    return render(request, "reviews/ticket.html", {"form": form, "ticket": ticket})
+    return render(request, "reviews/ticket_update.html", {"form": form, "ticket": ticket})
+
+
 
 
 ===============================================================================
@@ -634,7 +642,7 @@ def edit_ticket(request, ticket_id):
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}LITReview{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'reviews/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'reviews/css/styles.css' %}">
 </head>
 
 <body>
@@ -767,32 +775,78 @@ def edit_ticket(request, ticket_id):
 
 
 ===============================================================================
-    reviews/templates/reviews/ticket.html 
+    reviews/templates/reviews/ticket_create.html 
 ===============================================================================
 {% extends "reviews/base.html" %}
+{% load static %}
 
-{% block title %}Create Ticket{% endblock %}
+{% block title %}Créer un billet{% endblock %}
 
 {% block content %}
 <div class="ticket_box">
-    <h2>Create a new ticket</h2>
-    <form method="post" enctype="multipart/form-data">
+    <h2>Créer un billet</h2>
+    <form method="post" enctype="multipart/form-data" id="ticketForm">
         {% csrf_token %}
-        {{ form.as_p }}
+        <p>Titre:</p>
+        {{ form.title }}
 
-        {% if form.instance.image %}
-        <p>Current image:</p>
-        <img src="{{ form.instance.image.url }}" alt="Ticket image" width="200">
-        {% endif %}
+        <p>Description:</p>
+        {{ form.description }}
 
-        <button type="submit" class="btn">Create</button>
+        <!-- Image upload -->
+        <img id="imagePreview" width="200" style="display:none;" alt="Preview">
+        <input type="file" id="id_image" name="image" style="display:none;">
+        <label for="id_image" class="btn">Télécharger fichier</label>
+
+
+
+        <br><br>
+        <button type="submit" class="btn">Envoyer</button>
     </form>
 </div>
+
+<script src="{% static 'reviews/js/preview_image.js' %}"></script>
 {% endblock %}
 
 
 ===============================================================================
-    reviews/static/reviews/styles.css 
+    reviews/templates/reviews/ticket_update.html 
+===============================================================================
+{% extends "reviews/base.html" %}
+{% load static %}
+
+{% block title %}Modifier un billet{% endblock %}
+
+{% block content %}
+<div class="ticket_box">
+    <h2>Modifier un billet</h2>
+
+    <form method="post" enctype="multipart/form-data" id="ticketForm">
+        {% csrf_token %}
+
+        <p>Titre:</p>
+        {{ form.title }}
+
+        <p>Description:</p>
+        {{ form.description }}
+
+        <img id="imagePreview" width="200" {% if not form.instance.image %}style="display:none;" {% endif %}
+            src="{% if form.instance.image %}{{ form.instance.image.url }}{% endif %}" alt="Preview">
+
+        <input type="file" id="id_image" name="image" style="display:none;">
+        <label for="id_image" class="btn">Changer l’image</label>
+
+        <br><br>
+        <button type="submit" class="btn">Mettre à jour</button>
+    </form>
+</div>
+
+<script src="{% static 'reviews/js/preview_image.js' %}"></script>
+{% endblock %}
+
+
+===============================================================================
+    reviews/static/reviews/css/styles.css 
 ===============================================================================
 /* Base page styling */
 body {
