@@ -1,35 +1,39 @@
 {% extends "reviews/base.html" %}
 {% load static %}
 
-{% block title %}
-{% if edit_mode %}Modifier un billet{% else %}Créer un billet{% endif %}
+{% block title %}LITReview -
+{% if edit_mode %}Modifier un ticket{% else %}Créer un ticket{% endif %}
 {% endblock %}
 
 {% block content %}
 <div class="ticket_box">
-    <h2>{% if edit_mode %}Modifier un billet{% else %}Créer un billet{% endif %}</h2>
+    <h2>{% if edit_mode %}Modifier un ticket{% else %}Créer un ticket{% endif %}</h2>
 
     <form method="post" enctype="multipart/form-data" id="ticketForm">
         {% csrf_token %}
 
-        <p>Titre:</p>
-        {{ form.title }}
+        <div class="form_fields">
+            <p>Titre:</p>
+            {{ form.title }}
 
-        <p>Description:</p>
-        {{ form.description }}
+            <p>Description:</p>
+            {{ form.description }}
 
-        <img id="imagePreview" width="200" {% if edit_mode and ticket.image %} src="{{ ticket.image.url }}"
-            style="display:block;" {% else %} style="display:none;" {% endif %} alt="Preview">
+            <img id="imagePreview" width="200" {% if edit_mode and ticket.image %} src="{{ ticket.image.url }}"
+                style="display:block;" {% else %} style="display:none;" {% endif %} alt="Preview">
 
-        <input type="file" id="id_image" name="image" style="display:none;">
-        <label for="id_image" class="btn">Télécharger Fichier</label>
+            <input type="file" id="id_image" name="image" style="display:none;">
+            <label for="id_image" class="btn">Télécharger Fichier</label>
 
-        <br><br>
-        <button type="submit" class="btn">
-            {% if edit_mode %}Modifier{% else %}Créer{% endif %}
-        </button>
+        </div>
+        <div class="form_submit">
+            <br><br>
+            <button type="submit" class="btn" id="submitBtn" disabled>
+                {% if edit_mode %}Modifier{% else %}Envoyer{% endif %}
+            </button>
+        </div>
     </form>
 </div>
 
-<script src="{% static 'reviews/js/ticket_preview.js' %}"></script>
+<script src="{% static 'reviews/js/ticket.js' %}"></script>
 {% endblock %}

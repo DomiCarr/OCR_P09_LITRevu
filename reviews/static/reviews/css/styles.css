@@ -18,13 +18,13 @@ h2 {
 
 /* Buttons */
 .btn {
-    width: 100%;
+    width: 200px;
     padding: 10px;
     margin-top: 10px;
-    background: #007bff;
+    background: #5896d9;
     color: #fff;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 10px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -91,9 +91,10 @@ main {
    Signup
 --------------------------- */
 .signup_box {
+    width: 600px;
     background: #fff;
     padding: 30px;
-    border-radius: 8px;
+    border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
@@ -150,4 +151,33 @@ main {
 .pub_desc p {
     margin-left: 0;
     text-align: left;
+}
+
+/* --------------------------
+Tickets
+--------------------------- */
+
+.ticket_box {
+    width: 600px;
+    /* largeur confortable */
+    padding: 30px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Fields aligned to the left */
+.form_fields {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+/* Button aligned to the right */
+.form_submit {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
 }

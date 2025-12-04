@@ -9,5 +9,11 @@ class TicketForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={'id': 'title'}),
             'description': forms.Textarea(attrs={'id': 'description'}),
-            'image': forms.FileInput(attrs={'id': 'id_image', 'style': 'display:none;'}),
+            'image': forms.FileInput(attrs={'id': 'id_image'})
         }
+
+    def clean_image(self):
+        image = self.cleaned_data.get('image')
+        if not image:
+            raise forms.ValidationError("Une image est obligatoire.")
+        return image

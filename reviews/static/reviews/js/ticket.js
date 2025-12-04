@@ -1,71 +1,37 @@
-// ticket.js
-// Handles create/edit modes and image preview.
-
+// reviews/static/reviews/js/ticket.js
 document.addEventListener('DOMContentLoaded', () => {
-    const params = new URLSearchParams(window.location.search);
-    const mode = params.get('action') || 'create';
-    const ticketId = params.get('id') || null;
-
-    document.getElementById('mode').value = mode;
-    document.getElementById('ticket_id').value = ticketId;
-
-    const btnCreate = document.getElementById('btn_create');
-    const btnSave = document.getElementById('btn_save');
-    const btnDelete = document.getElementById('btn_delete');
-
-    // Switch UI depending on mode
-    if (mode === 'edit') {
-        btnCreate.style.display = 'none';
-        btnSave.style.display = 'inline-block';
-        btnDelete.style.display = 'inline-block';
-
-        loadTicket(ticketId);
-    } else {
-        btnCreate.style.display = 'inline-block';
-        btnSave.style.display = 'none';
-        btnDelete.style.display = 'none';
-    }
-
-    // Image preview setup
+    const titleInput = document.getElementById("title");
+    const descInput = document.getElementById("description");
     const inputImage = document.getElementById("id_image");
     const preview = document.getElementById("imagePreview");
+    const submitBtn = document.getElementById("submitBtn");
 
-    inputImage.addEventListener("change", function () {
-        const file = this.files[0];
+    function checkFields() {
+        const okTitle = titleInput.value.trim().length > 0;
+        const okDesc = descInput.value.trim().length > 0;
+        const okImg = preview.src && preview.src.trim() !== "";
+        submitBtn.disabled = !(okTitle && okDesc && okImg);
+    }
+
+    // Initial check
+    checkFields();
+
+    // Sur modification des champs texte
+    titleInput.addEventListener("input", checkFields);
+    descInput.addEventListener("input", checkFields);
+
+    // Sur sélection d’une image
+    inputImage.addEventListener("change", () => {
+        const file = inputImage.files[0];
         if (file) {
+            // Affiche la preview
             preview.src = URL.createObjectURL(file);
             preview.style.display = "block";
         } else {
+            // Pas de fichier => cache
+            preview.src = "";
             preview.style.display = "none";
         }
+        checkFields();
     });
 });
-
-// Loads data for edit mode (placeholder, replace with backend API)
-function loadTicket(id) {
-    const title = document.getElementById('title');
-    const desc = document.getElementById('description');
-
-    title.value = 'Sample title';
-    desc.value = 'Sample description';
-}
-
-// Called when user creates a ticket
-function createTicket() {
-    console.log('Creating ticket...');
-    document.getElementById('ticketForm').submit();
-}
-
-// Saves edited ticket
-function saveTicket() {
-    const id = document.getElementById('ticket_id').value;
-    console.log('Saving ticket', id);
-    document.getElementById('ticketForm').submit();
-}
-
-// Deletes edited ticket
-function deleteTicket() {
-    const id = document.getElementById('ticket_id').value;
-    console.log('Deleting ticket', id);
-    // Optionally: confirm before delete
-}

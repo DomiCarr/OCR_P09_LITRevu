@@ -11,16 +11,21 @@ echo "Generated $(date '+%Y-%m-%d %H:%M:%S')" >> "$output_file"
 echo "\n\n" >> "$output_file"
 
 # Extensions to include
-exts=("py" "html" "css")
+exts=("py" "html" "css" "js")
 
-# Loop through extensions
-for ext in $exts; do
-    find reviews -type f -name "*.$ext" | sort | while IFS= read -r f; do
-        echo "===============================================================================" >> "$output_file"
-        echo "    $f " >> "$output_file"
-        echo "===============================================================================" >> "$output_file"
-        cat "$f" >> "$output_file"
-        echo "\n\n" >> "$output_file"
+# Directories to scan
+dirs=("reviews" "reviews/static")
+
+# Loop through directories and extensions
+for dir in $dirs; do
+    for ext in $exts; do
+        find "$dir" -type f -name "*.$ext" | sort | while IFS= read -r f; do
+            echo "===============================================================================" >> "$output_file"
+            echo "    $f " >> "$output_file"
+            echo "===============================================================================" >> "$output_file"
+            cat "$f" >> "$output_file"
+            echo "\n\n" >> "$output_file"
+        done
     done
 done
 

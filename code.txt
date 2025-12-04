@@ -1,4 +1,4 @@
-Generated 2025-12-04 17:08:22
+Generated 2025-12-04 20:59:47
 
 
 
@@ -147,8 +147,14 @@ class TicketForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={'id': 'title'}),
             'description': forms.Textarea(attrs={'id': 'description'}),
-            'image': forms.FileInput(attrs={'id': 'id_image', 'style': 'display:none;'}),
+            'image': forms.FileInput(attrs={'id': 'id_image'})
         }
+
+    def clean_image(self):
+        image = self.cleaned_data.get('image')
+        if not image:
+            raise forms.ValidationError("Une image est obligatoire.")
+        return image
 
 
 
@@ -617,19 +623,32 @@ def create_ticket(request):
     GET: display empty form
     POST: validate form, assign current user, save, redirect
     """
+    # Check if the request is a POST (form submission)
     if request.method == "POST":
+        # Create a form instance with the submitted data and files
         form = TicketForm(request.POST, request.FILES)
+
+        # Check if the form data is valid
         if form.is_valid():
+            # Create a Ticket object but don't save it to the database yet
             ticket = form.save(commit=False)
+
+            # Assign the currently logged-in user to the ticket
             ticket.user = request.user
+
+            # Save the ticket to the database
             ticket.save()
+
+            # Redirect the user to the feed page after saving
             return redirect("feed")
     else:
+        # If the request is GET, create an empty form
         form = TicketForm()
 
+    # Render the ticket template with the form
     return render(request, "reviews/ticket.html", {
-        "form": form,
-        "mode": "create",
+        "form": form,      # Pass the form to the template
+        "mode": "create",  # Tell the template we are in 'create' mode
     })
 
 
@@ -748,7 +767,7 @@ def update_ticket(request, ticket_id):
 
 
 ===============================================================================
-    reviews/templates/reviews/review.html 
+    reviews/templates/reviews/review_create.html 
 ===============================================================================
 
 
@@ -788,37 +807,41 @@ def update_ticket(request, ticket_id):
 {% extends "reviews/base.html" %}
 {% load static %}
 
-{% block title %}
-{% if edit_mode %}Modifier un billet{% else %}Créer un billet{% endif %}
+{% block title %}LITReview -
+{% if edit_mode %}Modifier un ticket{% else %}Créer un ticket{% endif %}
 {% endblock %}
 
 {% block content %}
 <div class="ticket_box">
-    <h2>{% if edit_mode %}Modifier un billet{% else %}Créer un billet{% endif %}</h2>
+    <h2>{% if edit_mode %}Modifier un ticket{% else %}Créer un ticket{% endif %}</h2>
 
     <form method="post" enctype="multipart/form-data" id="ticketForm">
         {% csrf_token %}
 
-        <p>Titre:</p>
-        {{ form.title }}
+        <div class="form_fields">
+            <p>Titre:</p>
+            {{ form.title }}
 
-        <p>Description:</p>
-        {{ form.description }}
+            <p>Description:</p>
+            {{ form.description }}
 
-        <img id="imagePreview" width="200" {% if edit_mode and ticket.image %} src="{{ ticket.image.url }}"
-            style="display:block;" {% else %} style="display:none;" {% endif %} alt="Preview">
+            <img id="imagePreview" width="200" {% if edit_mode and ticket.image %} src="{{ ticket.image.url }}"
+                style="display:block;" {% else %} style="display:none;" {% endif %} alt="Preview">
 
-        <input type="file" id="id_image" name="image" style="display:none;">
-        <label for="id_image" class="btn">Télécharger Fichier</label>
+            <input type="file" id="id_image" name="image" style="display:none;">
+            <label for="id_image" class="btn">Télécharger Fichier</label>
 
-        <br><br>
-        <button type="submit" class="btn">
-            {% if edit_mode %}Modifier{% else %}Créer{% endif %}
-        </button>
+        </div>
+        <div class="form_submit">
+            <br><br>
+            <button type="submit" class="btn" id="submitBtn" disabled>
+                {% if edit_mode %}Modifier{% else %}Envoyer{% endif %}
+            </button>
+        </div>
     </form>
 </div>
 
-<script src="{% static 'reviews/js/ticket_preview.js' %}"></script>
+<script src="{% static 'reviews/js/ticket.js' %}"></script>
 {% endblock %}
 
 
@@ -845,13 +868,13 @@ h2 {
 
 /* Buttons */
 .btn {
-    width: 100%;
+    width: 200px;
     padding: 10px;
     margin-top: 10px;
-    background: #007bff;
+    background: #5896d9;
     color: #fff;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 10px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -918,9 +941,10 @@ main {
    Signup
 --------------------------- */
 .signup_box {
+    width: 600px;
     background: #fff;
     padding: 30px;
-    border-radius: 8px;
+    border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
@@ -978,5 +1002,308 @@ main {
     margin-left: 0;
     text-align: left;
 }
+
+/* --------------------------
+Tickets
+--------------------------- */
+
+.ticket_box {
+    width: 600px;
+    /* largeur confortable */
+    padding: 30px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Fields aligned to the left */
+.form_fields {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+/* Button aligned to the right */
+.form_submit {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+
+===============================================================================
+    reviews/static/reviews/js/ticket.js 
+===============================================================================
+// reviews/static/reviews/js/ticket.js
+document.addEventListener('DOMContentLoaded', () => {
+    const titleInput = document.getElementById("title");
+    const descInput = document.getElementById("description");
+    const inputImage = document.getElementById("id_image");
+    const preview = document.getElementById("imagePreview");
+    const submitBtn = document.getElementById("submitBtn");
+
+    function checkFields() {
+        const okTitle = titleInput.value.trim().length > 0;
+        const okDesc = descInput.value.trim().length > 0;
+        const okImg = preview.src && preview.src.trim() !== "";
+        submitBtn.disabled = !(okTitle && okDesc && okImg);
+    }
+
+    // Initial check
+    checkFields();
+
+    // Sur modification des champs texte
+    titleInput.addEventListener("input", checkFields);
+    descInput.addEventListener("input", checkFields);
+
+    // Sur sélection d’une image
+    inputImage.addEventListener("change", () => {
+        const file = inputImage.files[0];
+        if (file) {
+            // Affiche la preview
+            preview.src = URL.createObjectURL(file);
+            preview.style.display = "block";
+        } else {
+            // Pas de fichier => cache
+            preview.src = "";
+            preview.style.display = "none";
+        }
+        checkFields();
+    });
+});
+
+
+
+===============================================================================
+    reviews/static/reviews/css/styles.css 
+===============================================================================
+/* Base page styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: white;
+    font-size: 16px;
+    /* cohérence globale */
+}
+
+/* Titles */
+h1,
+h2 {
+    font-size: 24px;
+    font-weight: normal;
+}
+
+
+
+/* Buttons */
+.btn {
+    width: 200px;
+    padding: 10px;
+    margin-top: 10px;
+    background: #5896d9;
+    color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    transition: background 0.2s;
+    cursor: pointer;
+}
+
+.btn:disabled {
+    background: #fff;
+    color: #000;
+}
+
+
+/* Layout wrappers */
+header {
+    text-align: center;
+    padding: 20px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+/* --------------------------
+   Auth box title
+--------------------------- */
+.tit_box {
+    text-align: center;
+    font-weight: normal;
+    font-size: 16px;
+    /* cohérent login + signup */
+}
+
+/* --------------------------
+   Login
+--------------------------- */
+.login_window {
+    display: flex;
+    flex-direction: row;
+}
+
+.login_signup,
+.card {
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.connection {
+    display: flex;
+    flex-direction: column;
+}
+
+.card h2 {
+    margin-top: 0;
+}
+
+/* --------------------------
+   Signup
+--------------------------- */
+.signup_box {
+    width: 600px;
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.signup_box p {
+    margin-bottom: 20px;
+}
+
+.signup_box form {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+}
+
+.signup_actions {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+
+/* --------------------------
+   Publications
+--------------------------- */
+.page {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.pub_line {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 80%;
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    margin: 10px;
+}
+
+.pub_desc {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 60%;
+}
+
+.pub_desc p {
+    margin-left: 0;
+    text-align: left;
+}
+
+/* --------------------------
+Tickets
+--------------------------- */
+
+.ticket_box {
+    width: 600px;
+    /* largeur confortable */
+    padding: 30px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Fields aligned to the left */
+.form_fields {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+/* Button aligned to the right */
+.form_submit {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+
+===============================================================================
+    reviews/static/reviews/js/ticket.js 
+===============================================================================
+// reviews/static/reviews/js/ticket.js
+document.addEventListener('DOMContentLoaded', () => {
+    const titleInput = document.getElementById("title");
+    const descInput = document.getElementById("description");
+    const inputImage = document.getElementById("id_image");
+    const preview = document.getElementById("imagePreview");
+    const submitBtn = document.getElementById("submitBtn");
+
+    function checkFields() {
+        const okTitle = titleInput.value.trim().length > 0;
+        const okDesc = descInput.value.trim().length > 0;
+        const okImg = preview.src && preview.src.trim() !== "";
+        submitBtn.disabled = !(okTitle && okDesc && okImg);
+    }
+
+    // Initial check
+    checkFields();
+
+    // Sur modification des champs texte
+    titleInput.addEventListener("input", checkFields);
+    descInput.addEventListener("input", checkFields);
+
+    // Sur sélection d’une image
+    inputImage.addEventListener("change", () => {
+        const file = inputImage.files[0];
+        if (file) {
+            // Affiche la preview
+            preview.src = URL.createObjectURL(file);
+            preview.style.display = "block";
+        } else {
+            // Pas de fichier => cache
+            preview.src = "";
+            preview.style.display = "none";
+        }
+        checkFields();
+    });
+});
+
 
 

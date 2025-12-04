@@ -13,19 +13,32 @@ def create_ticket(request):
     GET: display empty form
     POST: validate form, assign current user, save, redirect
     """
+    # Check if the request is a POST (form submission)
     if request.method == "POST":
+        # Create a form instance with the submitted data and files
         form = TicketForm(request.POST, request.FILES)
+
+        # Check if the form data is valid
         if form.is_valid():
+            # Create a Ticket object but don't save it to the database yet
             ticket = form.save(commit=False)
+
+            # Assign the currently logged-in user to the ticket
             ticket.user = request.user
+
+            # Save the ticket to the database
             ticket.save()
+
+            # Redirect the user to the feed page after saving
             return redirect("feed")
     else:
+        # If the request is GET, create an empty form
         form = TicketForm()
 
+    # Render the ticket template with the form
     return render(request, "reviews/ticket.html", {
-        "form": form,
-        "mode": "create",
+        "form": form,      # Pass the form to the template
+        "mode": "create",  # Tell the template we are in 'create' mode
     })
 
 
