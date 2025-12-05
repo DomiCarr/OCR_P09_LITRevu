@@ -88,19 +88,25 @@ main {
 }
 
 /* --------------------------
-   Signup
+   Boxes
 --------------------------- */
-.signup_box {
+.box {
     width: 600px;
+    max-width: 90%;
     background: #fff;
     padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-bottom: 20px;
 }
 
+
+/* --------------------------
+   Signup
+--------------------------- */
 .signup_box p {
     margin-bottom: 20px;
 }
@@ -134,11 +140,12 @@ main {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    width: 80%;
-    border-style: solid;
-    border-width: 1px;
-    border-color: black;
+    width: 600px;
     margin: 10px;
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 .pub_desc {
@@ -157,15 +164,6 @@ main {
 Tickets
 --------------------------- */
 
-.ticket_box {
-    width: 600px;
-    /* largeur confortable */
-    padding: 30px;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
 
 /* Fields aligned to the left */
 .form_fields {
@@ -180,4 +178,15 @@ Tickets
     display: flex;
     justify-content: flex-end;
     margin-top: 10px;
+}
+
+/* --------------------------
+Reviews
+--------------------------- */
+
+/* Horizontal radio buttons */
+.note_radios label {
+    display: inline-block;
+    margin-right: 10px;
+    cursor: pointer;
 }

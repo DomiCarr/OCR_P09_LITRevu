@@ -39,15 +39,15 @@ class Review(models.Model):
     ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)
 
     # Rating of the review, between 0 and 5
-    rating = models.PositiveSmallIntegerField(
+    note = models.PositiveSmallIntegerField(
         validators=[MinValueValidator(0), MaxValueValidator(5)]
     )
 
     # Short headline/title for the review
-    headline = models.CharField(max_length=128)
+    titre = models.CharField(max_length=128)
 
     # Detailed review text, optional, max 8192 characters
-    body = models.TextField(max_length=8192, blank=True)
+    commentaire = models.TextField(max_length=8192, blank=True)
 
     # User who wrote the review
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -57,7 +57,7 @@ class Review(models.Model):
 
     # Human-readable representation of a Review instance
     def __str__(self):
-        return f"{self.headline} ({self.user})"
+        return f"{self.titre} ({self.user})"
 
 
 # -------------------------------------------------------------------

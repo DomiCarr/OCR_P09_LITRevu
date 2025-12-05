@@ -6,6 +6,7 @@ from .views.auth_view import login_view, signup_view, logout_view
 from .views.publication_view import list_publications
 from reviews.views.ticket_view import create_ticket, update_ticket
 from reviews.views.feed_view import feed_view
+from reviews.views.review_view import create_review
 
 urlpatterns = [
     path('', login_view, name='login'),  # page d'accueil = login
@@ -15,6 +16,8 @@ urlpatterns = [
     path('tickets/new/', create_ticket, name='ticket_create'),
     path('tickets/update/<int:ticket_id>/', update_ticket, name='ticket_update'),
     path('feed/', feed_view, name='feed'),
+    path('reviews/new/', create_review, name='review_create'),
+    path('reviews/new/<int:ticket_id>/', create_review, name='review_create_ticket'),
 ]
 
 # Serve uploaded media files during development

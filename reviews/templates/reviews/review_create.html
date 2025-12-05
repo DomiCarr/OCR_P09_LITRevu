@@ -1,0 +1,67 @@
+{% extends "reviews/base.html" %}
+{% load static %}
+
+{% block title %}LITReview - Créer une critique{% endblock %}
+
+{% block content %}
+<div class="create_review">
+    <div class="box ticket_box">
+        <h2>Créer une critique</h2>
+
+        {% if ticket %}
+        Vous êtes en train de poster en réponse à :
+        <div class="ticket_context">
+            <p>{{ ticket.user.username }} a demandé une critique</p>
+            <h3>Ticket : {{ ticket.title }}</h3>
+            <p>{{ ticket.description }}</p>
+            {% if ticket.image %}
+            <img src="{{ ticket.image.url }}" width="200" alt="Ticket image">
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="box review_box">
+        <form method="post" enctype="multipart/form-data" id="reviewForm">
+            {% csrf_token %}
+
+            {% if ticket_form %}
+            <fieldset>
+                <legend>Créer Ticket</legend>
+
+                <p>{{ ticket_form.title.label_tag }}<br>{{ ticket_form.title }}</p>
+                <p>{{ ticket_form.description.label_tag }}<br>{{ ticket_form.description }}</p>
+
+                <input type="file" id="image" name="image" style="display:none;">
+                <button type="button" id="fileBtn" class="btn">Télécharger Fichier</button>
+
+                <div class="image_preview_wrapper">
+                    <img id="image_preview" src="" alt="" class="image_preview"
+                        style="display:none; width:200px; margin-top:10px;">
+                </div>
+            </fieldset>
+            {% endif %}
+
+            <fieldset>
+                <legend>Critique</legend>
+                <p>{{ review_form.titre.label_tag }}<br>{{ review_form.titre }}</p>
+                <p>{{ review_form.note.label_tag }}</p>
+                <div class="note_radios">
+                    {% for radio in review_form.note %}
+                    <label>{{ radio.tag }} {{ radio.choice_label }}</label>
+                    {% endfor %}
+                </div>
+
+                <p>{{ review_form.commentaire.label_tag }}<br>{{ review_form.commentaire }}</p>
+            </fieldset>
+
+            <div class="form_submit">
+                <button type="submit" id="submitBtn" class="btn" disabled>Envoyer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="{% static 'reviews/js/review.js' %}"></script>
+
+{% endblock %}

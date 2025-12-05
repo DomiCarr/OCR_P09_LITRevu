@@ -2,7 +2,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const titleInput = document.getElementById("title");
     const descInput = document.getElementById("description");
-    const inputImage = document.getElementById("id_image");
+    const inputImage = document.getElementById("image");
     const preview = document.getElementById("imagePreview");
     const submitBtn = document.getElementById("submitBtn");
 

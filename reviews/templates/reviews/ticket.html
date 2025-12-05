@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="ticket_box">
+<div class="box">
     <h2>{% if edit_mode %}Modifier un ticket{% else %}Créer un ticket{% endif %}</h2>
 
     <form method="post" enctype="multipart/form-data" id="ticketForm">
@@ -22,8 +22,8 @@
             <img id="imagePreview" width="200" {% if edit_mode and ticket.image %} src="{{ ticket.image.url }}"
                 style="display:block;" {% else %} style="display:none;" {% endif %} alt="Preview">
 
-            <input type="file" id="id_image" name="image" style="display:none;">
-            <label for="id_image" class="btn">Télécharger Fichier</label>
+            <input type="file" id="image" name="image" style="display:none;">
+            <label for="image" class="btn">Télécharger Fichier</label>
 
         </div>
         <div class="form_submit">

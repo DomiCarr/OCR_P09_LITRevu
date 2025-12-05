@@ -9,7 +9,7 @@ class TicketForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={'id': 'title'}),
             'description': forms.Textarea(attrs={'id': 'description'}),
-            'image': forms.FileInput(attrs={'id': 'id_image'})
+            'image': forms.FileInput(attrs={'id': 'image'})
         }
 
     def clean_image(self):

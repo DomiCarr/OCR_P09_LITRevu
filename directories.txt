@@ -1,9 +1,7 @@
-Generated 2025-12-02 09:25:31
+Generated 2025-12-05 16:26:34
 
 Listing all files and folders in '.' (excluding env/, hidden files, and __pycache__):
 
-./590041622_1336643951593883_3658266628288774026_n.jpg
-./590041622_1336643951593883_3658266628288774026_n_mF6HvP8.jpg
 ./LITRevu
     ./LITRevu/__init__.py
     ./LITRevu/asgi.py
@@ -15,6 +13,32 @@ Listing all files and folders in '.' (excluding env/, hidden files, and __pycach
 ./concat.sh
 ./data
     ./data/publications.json
+    ./data/ticket_images
+        ./data/ticket_images/394003254_1496198301180234_4380378405565178736_n.jpg
+        ./data/ticket_images/394003254_1496198301180234_4380378405565178736_n_Dk8pMyw.jpg
+        ./data/ticket_images/394003254_1496198301180234_4380378405565178736_n_MIF7qJf.jpg
+        ./data/ticket_images/394003254_1496198301180234_4380378405565178736_n_b3bYeP3.jpg
+        ./data/ticket_images/436745724_3665881243626766_775860566340064659_n.jpg
+        ./data/ticket_images/474766233_1144067357267614_5235620514725475794_n.jpg
+        ./data/ticket_images/474766233_1144067357267614_5235620514725475794_n_yg14uCy.jpg
+        ./data/ticket_images/475116122_546522298416414_2697959825336516184_n.jpg
+        ./data/ticket_images/486325940_1090947749739607_2275194311879367784_n.jpg
+        ./data/ticket_images/486325940_1090947749739607_2275194311879367784_n_ATTFZFg.jpg
+        ./data/ticket_images/486325940_1090947749739607_2275194311879367784_n_JrMr1JN.jpg
+        ./data/ticket_images/486325940_1090947749739607_2275194311879367784_n_LBCmRJ2.jpg
+        ./data/ticket_images/486325940_1090947749739607_2275194311879367784_n_VN9JOCC.jpg
+        ./data/ticket_images/486325940_1090947749739607_2275194311879367784_n_WGzqkQO.jpg
+        ./data/ticket_images/486325940_1090947749739607_2275194311879367784_n_pBk4Pay.jpg
+        ./data/ticket_images/486325940_1090947749739607_2275194311879367784_n_py565Kb.jpg
+        ./data/ticket_images/590041622_1336643951593883_3658266628288774026_n.jpg
+        ./data/ticket_images/590041622_1336643951593883_3658266628288774026_n_GBcbeT9.jpg
+        ./data/ticket_images/590041622_1336643951593883_3658266628288774026_n_TzfodKv.jpg
+        ./data/ticket_images/590041622_1336643951593883_3658266628288774026_n_bGKwsK3.jpg
+        ./data/ticket_images/590041622_1336643951593883_3658266628288774026_n_h5t2yWG.jpg
+        ./data/ticket_images/590041622_1336643951593883_3658266628288774026_n_iXLCeIp.jpg
+        ./data/ticket_images/590041622_1336643951593883_3658266628288774026_n_q8KgH88.jpg
+        ./data/ticket_images/IMG_9935.JPG
+        ./data/ticket_images/calimero.png
 ./db.sqlite3
 ./dir.sh
 ./directories.txt
@@ -33,22 +57,23 @@ Listing all files and folders in '.' (excluding env/, hidden files, and __pycach
         ./reviews/migrations/0001_initial.py
         ./reviews/migrations/0002_publication.py
         ./reviews/migrations/0003_alter_publication_image.py
+        ./reviews/migrations/0004_alter_ticket_image.py
         ./reviews/migrations/__init__.py
     ./reviews/models.py
     ./reviews/static
         ./reviews/static/reviews
-            ./reviews/static/reviews/styles.css
+            ./reviews/static/reviews/css
+                ./reviews/static/reviews/css/styles.css
+            ./reviews/static/reviews/js
+                ./reviews/static/reviews/js/ticket.js
     ./reviews/templates
         ./reviews/templates/reviews
             ./reviews/templates/reviews/base.html
             ./reviews/templates/reviews/feed.html
             ./reviews/templates/reviews/login.html
             ./reviews/templates/reviews/publication_list.html
-            ./reviews/templates/reviews/review.html
+            ./reviews/templates/reviews/review_create.html
             ./reviews/templates/reviews/signup.html
-            ./reviews/templates/reviews/snippets
-                ./reviews/templates/reviews/snippets/review_snippet.html
-                ./reviews/templates/reviews/snippets/ticket_snippet.html
             ./reviews/templates/reviews/ticket.html
     ./reviews/tests.py
     ./reviews/urls.py
