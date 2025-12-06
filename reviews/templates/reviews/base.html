@@ -11,9 +11,17 @@
 
 <body>
 
-    <header>
+    <header class="header-bar">
         <h1>LITReview</h1>
+        <div class="menu">
+            <p>Flux</p>
+            <p>Posts</p>
+            <p>Abonnements</p>
+            <p class="header-user">Deconnecter {{ request.user.username }}</p>
+        </div>
     </header>
+
+
 
     <main>
         {% block content %}{% endblock %}

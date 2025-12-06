@@ -38,13 +38,40 @@ h2 {
     color: #000;
 }
 
-
-/* Layout wrappers */
-header {
+header.header-bar {
+    position: relative;
+    /* container for absolute menu */
+    width: 100%;
     text-align: center;
-    padding: 20px 0;
+    /* center the title */
+    padding: 20px 30px;
     border-bottom: 1px solid #ddd;
+    box-sizing: border-box;
 }
+
+header.header-bar h1 {
+    margin: 0;
+    display: inline-block;
+    /* needed for centering */
+}
+
+header.header-bar .menu {
+    position: absolute;
+    right: 30px;
+    /* Position the top edge of the element at 50% of the parent height */
+    top: 50%;
+    /* Shift the element up by half of its own height to center it vertically */
+    transform: translateY(-50%);
+    display: flex;
+    gap: 20px;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+header.header-bar .menu p {
+    margin: 0;
+}
+
 
 main {
     display: flex;
@@ -91,7 +118,7 @@ main {
    Boxes
 --------------------------- */
 .box {
-    width: 600px;
+    width: 800px;
     max-width: 90%;
     background: #fff;
     padding: 30px;
@@ -133,6 +160,7 @@ main {
     padding: 20px;
     display: flex;
     flex-direction: column;
+    align-items: center;
     justify-content: center;
 }
 
@@ -140,7 +168,7 @@ main {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    width: 600px;
+    width: 800px;
     margin: 10px;
     background: #fff;
     padding: 30px;
@@ -189,4 +217,14 @@ Reviews
     display: inline-block;
     margin-right: 10px;
     cursor: pointer;
+}
+
+@media (max-width: 700px) {
+    header.header-bar .menu {
+        position: static;
+        transform: none;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        margin-top: 10px;
+    }
 }

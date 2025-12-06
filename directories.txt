@@ -1,4 +1,4 @@
-Generated 2025-12-05 16:26:34
+Generated 2025-12-05 19:02:17
 
 Listing all files and folders in '.' (excluding env/, hidden files, and __pycache__):
 
@@ -18,9 +18,15 @@ Listing all files and folders in '.' (excluding env/, hidden files, and __pycach
         ./data/ticket_images/394003254_1496198301180234_4380378405565178736_n_Dk8pMyw.jpg
         ./data/ticket_images/394003254_1496198301180234_4380378405565178736_n_MIF7qJf.jpg
         ./data/ticket_images/394003254_1496198301180234_4380378405565178736_n_b3bYeP3.jpg
+        ./data/ticket_images/424610841_854962950004377_7171882016741188318_n.jpg
+        ./data/ticket_images/436492262_1290478522356555_8213347345273548403_n.jpg
         ./data/ticket_images/436745724_3665881243626766_775860566340064659_n.jpg
         ./data/ticket_images/474766233_1144067357267614_5235620514725475794_n.jpg
+        ./data/ticket_images/474766233_1144067357267614_5235620514725475794_n_DNOb75B.jpg
+        ./data/ticket_images/474766233_1144067357267614_5235620514725475794_n_kKtbCc1.jpg
         ./data/ticket_images/474766233_1144067357267614_5235620514725475794_n_yg14uCy.jpg
+        ./data/ticket_images/474948928_9317914211562486_6301993142417394402_n.jpg
+        ./data/ticket_images/475096783_546523445082966_7253792985427686282_n.jpg
         ./data/ticket_images/475116122_546522298416414_2697959825336516184_n.jpg
         ./data/ticket_images/486325940_1090947749739607_2275194311879367784_n.jpg
         ./data/ticket_images/486325940_1090947749739607_2275194311879367784_n_ATTFZFg.jpg
@@ -30,6 +36,7 @@ Listing all files and folders in '.' (excluding env/, hidden files, and __pycach
         ./data/ticket_images/486325940_1090947749739607_2275194311879367784_n_WGzqkQO.jpg
         ./data/ticket_images/486325940_1090947749739607_2275194311879367784_n_pBk4Pay.jpg
         ./data/ticket_images/486325940_1090947749739607_2275194311879367784_n_py565Kb.jpg
+        ./data/ticket_images/486325940_1090947749739607_2275194311879367784_n_z2yido6.jpg
         ./data/ticket_images/590041622_1336643951593883_3658266628288774026_n.jpg
         ./data/ticket_images/590041622_1336643951593883_3658266628288774026_n_GBcbeT9.jpg
         ./data/ticket_images/590041622_1336643951593883_3658266628288774026_n_TzfodKv.jpg
@@ -58,6 +65,8 @@ Listing all files and folders in '.' (excluding env/, hidden files, and __pycach
         ./reviews/migrations/0002_publication.py
         ./reviews/migrations/0003_alter_publication_image.py
         ./reviews/migrations/0004_alter_ticket_image.py
+        ./reviews/migrations/0005_alter_ticket_image.py
+        ./reviews/migrations/0006_rename_body_review_commentaire_and_more.py
         ./reviews/migrations/__init__.py
     ./reviews/models.py
     ./reviews/static
@@ -65,11 +74,13 @@ Listing all files and folders in '.' (excluding env/, hidden files, and __pycach
             ./reviews/static/reviews/css
                 ./reviews/static/reviews/css/styles.css
             ./reviews/static/reviews/js
+                ./reviews/static/reviews/js/review.js
                 ./reviews/static/reviews/js/ticket.js
     ./reviews/templates
         ./reviews/templates/reviews
             ./reviews/templates/reviews/base.html
             ./reviews/templates/reviews/feed.html
+            ./reviews/templates/reviews/follow.html
             ./reviews/templates/reviews/login.html
             ./reviews/templates/reviews/publication_list.html
             ./reviews/templates/reviews/review_create.html

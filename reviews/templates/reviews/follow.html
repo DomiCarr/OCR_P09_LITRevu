@@ -1,0 +1,61 @@
+{% extends "reviews/base.html" %}
+{% block title %}LITReview - Follow{% endblock %}
+{% block content %}
+<div class="page">
+
+    <!-- Follow a user -->
+    <div class="box">
+        <h2>Suivre d'autres utilisateurs</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form_fields">
+                <input type="text" name="follow_username" placeholder="Nom d'utilisateur">
+            </div>
+            <div class="form_submit">
+                <button type="submit" class="btn">Envoyer</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Following -->
+    <div class="box">
+        <h2>Abonnements</h2>
+        <table>
+            {% for follow in abonnements %}
+            <tr>
+                <!-- field in model is 'followed_user' -->
+                <td>{{ follow.followed_user.username }}</td>
+                <td>
+                    <form method="post" action="#">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">Se désabonner</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2">Aucun abonnement</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <!-- Followers -->
+    <div class="box">
+        <h2>Abonnés</h2>
+        <table>
+            {% for follow in abonnes %}
+            <tr>
+                <!-- for followers, the follower is stored in the 'user' field -->
+                <td>{{ follow.user.username }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2">Aucun abonné</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</div>
+{% endblock %}

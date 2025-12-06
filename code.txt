@@ -1,4 +1,4 @@
-Generated 2025-12-05 17:51:22
+Generated 2025-12-06 14:30:45
 
 
 
@@ -123,13 +123,27 @@ class LoginForm(forms.Form):
 ===============================================================================
     reviews/forms/review_form.py 
 ===============================================================================
+# reviews/forms/review_form.py
 from django import forms
 from reviews.models import Review
 
+
 class ReviewForm(forms.ModelForm):
+    NOTE_CHOICES = [(i, str(i)) for i in range(6)]  # 0 à 5
+
+    note = forms.ChoiceField(
+        choices=NOTE_CHOICES,
+        widget=forms.RadioSelect(attrs={'id': 'note'}),
+        label="Note"
+    )
+
     class Meta:
         model = Review
         fields = ['titre', 'note', 'commentaire']
+        widgets = {
+            'titre': forms.TextInput(attrs={'id': 'titre'}),
+            'commentaire': forms.Textarea(attrs={'id': 'commentaire'}),
+        }
 
 
 
@@ -500,6 +514,7 @@ from .views.publication_view import list_publications
 from reviews.views.ticket_view import create_ticket, update_ticket
 from reviews.views.feed_view import feed_view
 from reviews.views.review_view import create_review
+from reviews.views.follow_view import follow_view
 
 urlpatterns = [
     path('', login_view, name='login'),  # page d'accueil = login
@@ -511,6 +526,8 @@ urlpatterns = [
     path('feed/', feed_view, name='feed'),
     path('reviews/new/', create_review, name='review_create'),
     path('reviews/new/<int:ticket_id>/', create_review, name='review_create_ticket'),
+    path("follow/", follow_view, name="follow"),
+
 ]
 
 # Serve uploaded media files during development
@@ -640,6 +657,42 @@ def feed_view(request):
 ===============================================================================
     reviews/views/follow_view.py 
 ===============================================================================
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from reviews.models import UserFollows
+import logging
+
+logger = logging.getLogger(__name__)
+
+@login_required
+def follow_view(request):
+    user = request.user
+
+    # Ajouter un abonnement
+    if request.method == "POST" and "follow_username" in request.POST:
+        username_to_follow = request.POST.get("follow_username", "").strip()
+        logger.debug("follow_view POST received: %r by user %r", username_to_follow, user.username)
+        try:
+            target_user = User.objects.get(username=username_to_follow)
+            if target_user != user:
+                obj, created = UserFollows.objects.get_or_create(
+                    user=user, followed_user=target_user
+                )
+                logger.debug("UserFollows get_or_create returned: created=%s id=%s", created, getattr(obj, "id", None))
+        except User.DoesNotExist:
+            logger.debug("User to follow not found: %r", username_to_follow)
+        return redirect("follow")
+
+    # Listes abonnements et abonnés (noms de champs corrects)
+    abonnements = UserFollows.objects.filter(user=user).select_related("followed_user")
+    abonnes = UserFollows.objects.filter(followed_user=user).select_related("user")
+
+    context = {
+        "abonnements": abonnements,
+        "abonnes": abonnes,
+    }
+    return render(request, "reviews/follow.html", context)
 
 
 
@@ -814,9 +867,11 @@ def update_ticket(request, ticket_id):
 
 <body>
 
-    <header>
+    <header class="box header-bar">
         <h1>LITReview</h1>
+        <p class="header-user">{{ request.user.username }}</p>
     </header>
+
 
     <main>
         {% block content %}{% endblock %}
@@ -831,6 +886,71 @@ def update_ticket(request, ticket_id):
     reviews/templates/reviews/feed.html 
 ===============================================================================
 
+
+
+===============================================================================
+    reviews/templates/reviews/follow.html 
+===============================================================================
+{% extends "reviews/base.html" %}
+{% block content %}
+<div class="page">
+
+    <!-- Follow a user -->
+    <div class="box">
+        <h2>Suivre d'autres utilisateurs</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form_fields">
+                <input type="text" name="follow_username" placeholder="Nom d'utilisateur">
+            </div>
+            <div class="form_submit">
+                <button type="submit" class="btn">Envoyer</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Following -->
+    <div class="box">
+        <h2>Abonnements</h2>
+        <table>
+            {% for follow in abonnements %}
+            <tr>
+                <!-- field in model is 'followed_user' -->
+                <td>{{ follow.followed_user.username }}</td>
+                <td>
+                    <form method="post" action="#">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">Se désabonner</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2">Aucun abonnement</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <!-- Followers -->
+    <div class="box">
+        <h2>Abonnés</h2>
+        <table>
+            {% for follow in abonnes %}
+            <tr>
+                <!-- for followers, the follower is stored in the 'user' field -->
+                <td>{{ follow.user.username }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2">Aucun abonné</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</div>
+{% endblock %}
 
 
 ===============================================================================
@@ -944,7 +1064,13 @@ def update_ticket(request, ticket_id):
             <fieldset>
                 <legend>Critique</legend>
                 <p>{{ review_form.titre.label_tag }}<br>{{ review_form.titre }}</p>
-                <p>{{ review_form.note.label_tag }}<br>{{ review_form.note }}</p>
+                <p>{{ review_form.note.label_tag }}</p>
+                <div class="note_radios">
+                    {% for radio in review_form.note %}
+                    <label>{{ radio.tag }} {{ radio.choice_label }}</label>
+                    {% endfor %}
+                </div>
+
                 <p>{{ review_form.commentaire.label_tag }}<br>{{ review_form.commentaire }}</p>
             </fieldset>
 
@@ -1070,12 +1196,22 @@ h2 {
 }
 
 
-/* Layout wrappers */
-header {
-    text-align: center;
+.header-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: 20px 0;
     border-bottom: 1px solid #ddd;
+    position: relative;
 }
+
+.header-bar .header-user {
+    position: absolute;
+    right: 20px;
+    font-size: 14px;
+    color: #555;
+}
+
 
 main {
     display: flex;
@@ -1211,6 +1347,17 @@ Tickets
     margin-top: 10px;
 }
 
+/* --------------------------
+Reviews
+--------------------------- */
+
+/* Horizontal radio buttons */
+.note_radios label {
+    display: inline-block;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
 
 ===============================================================================
     reviews/static/reviews/js/review.js 
@@ -1231,37 +1378,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ---------------- Review fields ----------------
     const reviewTitre = document.getElementById("titre");
-    const reviewNote = document.getElementById("note");
     const reviewCommentaire = document.getElementById("commentaire");
+    const reviewRadios = document.querySelectorAll('input[name="note"]');
 
     const submitBtn = document.getElementById("submitBtn");
 
     // ---------------- Check function ----------------
     function checkFields() {
-        // Si les champs ticket existent dans le DOM
         const hasTicketForm = titleInput || descInput || inputImage;
 
         let okTicket = true;
         if (hasTicketForm) {
             okTicket =
-                titleInput.value.trim().length > 0 &&
-                descInput.value.trim().length > 0 &&
-                preview.src && preview.src.trim() !== "";
+                titleInput?.value.trim().length > 0 &&
+                descInput?.value.trim().length > 0 &&
+                preview?.src && preview.src.trim() !== "";
         }
 
-        // Vérification des champs review
         const okReview =
             reviewTitre && reviewTitre.value.trim().length > 0 &&
-            reviewNote && reviewNote.value.trim().length > 0 &&
-            reviewCommentaire && reviewCommentaire.value.trim().length > 0;
+            reviewCommentaire && reviewCommentaire.value.trim().length > 0 &&
+            Array.from(reviewRadios).some(r => r.checked);
 
         submitBtn.disabled = !(okTicket && okReview);
     }
 
     // ---------------- Event listeners ----------------
-    [titleInput, descInput, reviewTitre, reviewNote, reviewCommentaire].forEach(el => {
+    [titleInput, descInput, reviewTitre, reviewCommentaire].forEach(el => {
         if (el) el.addEventListener("input", checkFields);
     });
+
+    reviewRadios.forEach(r => r.addEventListener("change", checkFields));
 
     if (inputImage) {
         inputImage.addEventListener("change", () => {
@@ -1370,12 +1517,22 @@ h2 {
 }
 
 
-/* Layout wrappers */
-header {
-    text-align: center;
+.header-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: 20px 0;
     border-bottom: 1px solid #ddd;
+    position: relative;
 }
+
+.header-bar .header-user {
+    position: absolute;
+    right: 20px;
+    font-size: 14px;
+    color: #555;
+}
+
 
 main {
     display: flex;
@@ -1511,6 +1668,17 @@ Tickets
     margin-top: 10px;
 }
 
+/* --------------------------
+Reviews
+--------------------------- */
+
+/* Horizontal radio buttons */
+.note_radios label {
+    display: inline-block;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
 
 ===============================================================================
     reviews/static/reviews/js/review.js 
@@ -1531,37 +1699,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ---------------- Review fields ----------------
     const reviewTitre = document.getElementById("titre");
-    const reviewNote = document.getElementById("note");
     const reviewCommentaire = document.getElementById("commentaire");
+    const reviewRadios = document.querySelectorAll('input[name="note"]');
 
     const submitBtn = document.getElementById("submitBtn");
 
     // ---------------- Check function ----------------
     function checkFields() {
-        // Si les champs ticket existent dans le DOM
         const hasTicketForm = titleInput || descInput || inputImage;
 
         let okTicket = true;
         if (hasTicketForm) {
             okTicket =
-                titleInput.value.trim().length > 0 &&
-                descInput.value.trim().length > 0 &&
-                preview.src && preview.src.trim() !== "";
+                titleInput?.value.trim().length > 0 &&
+                descInput?.value.trim().length > 0 &&
+                preview?.src && preview.src.trim() !== "";
         }
 
-        // Vérification des champs review
         const okReview =
             reviewTitre && reviewTitre.value.trim().length > 0 &&
-            reviewNote && reviewNote.value.trim().length > 0 &&
-            reviewCommentaire && reviewCommentaire.value.trim().length > 0;
+            reviewCommentaire && reviewCommentaire.value.trim().length > 0 &&
+            Array.from(reviewRadios).some(r => r.checked);
 
         submitBtn.disabled = !(okTicket && okReview);
     }
 
     // ---------------- Event listeners ----------------
-    [titleInput, descInput, reviewTitre, reviewNote, reviewCommentaire].forEach(el => {
+    [titleInput, descInput, reviewTitre, reviewCommentaire].forEach(el => {
         if (el) el.addEventListener("input", checkFields);
     });
+
+    reviewRadios.forEach(r => r.addEventListener("change", checkFields));
 
     if (inputImage) {
         inputImage.addEventListener("change", () => {

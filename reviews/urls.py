@@ -7,6 +7,7 @@ from .views.publication_view import list_publications
 from reviews.views.ticket_view import create_ticket, update_ticket
 from reviews.views.feed_view import feed_view
 from reviews.views.review_view import create_review
+from reviews.views.follow_view import follow_view
 
 urlpatterns = [
     path('', login_view, name='login'),  # page d'accueil = login
@@ -18,6 +19,8 @@ urlpatterns = [
     path('feed/', feed_view, name='feed'),
     path('reviews/new/', create_review, name='review_create'),
     path('reviews/new/<int:ticket_id>/', create_review, name='review_create_ticket'),
+    path("follow/", follow_view, name="follow"),
+
 ]
 
 # Serve uploaded media files during development
