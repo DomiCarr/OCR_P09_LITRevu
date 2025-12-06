@@ -145,6 +145,20 @@ main {
     margin-bottom: 20px;
 }
 
+.box.action_box {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+
+.box.action_box .btn {
+    margin-top: 0;
+}
+
+
 
 /* --------------------------
    Signup

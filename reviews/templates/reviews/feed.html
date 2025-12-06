@@ -6,6 +6,12 @@
 <main class="page">
     <h2>Le flux</h2>
 
+    <div class="box action_box">
+        <a href="{% url 'ticket_create' %}" class="btn">Demander une critique</a>
+        <a href="{% url 'review_create' %}" class="btn">Créer une critique</a>
+    </div>
+
+
     {% for post in posts %}
     {% if post.content_type == 'TICKET' %}
     <div class="box pub_line">

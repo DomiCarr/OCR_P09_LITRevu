@@ -17,7 +17,7 @@
         <div class="menu">
             <a href="{% url 'feed' %}">Flux</a>
             <p>Posts</p>
-            <p>Abonnements</p>
+            <a href="{% url 'follow' %}">Abonnements</a>
             <a class="header-user" href="{% url 'logout' %}">
                 Déconnecter {{ request.user.username }}
             </a>
