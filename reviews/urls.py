@@ -20,7 +20,6 @@ urlpatterns = [
     path('reviews/new/', create_review, name='review_create'),
     path('reviews/new/<int:ticket_id>/', create_review, name='review_create_ticket'),
     path("follow/", follow_view, name="follow"),
-
 ]
 
 # Serve uploaded media files during development

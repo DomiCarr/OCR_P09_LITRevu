@@ -1,4 +1,4 @@
-Generated 2025-12-05 19:02:17
+Generated 2025-12-06 17:07:43
 
 Listing all files and folders in '.' (excluding env/, hidden files, and __pycache__):
 
@@ -94,6 +94,7 @@ Listing all files and folders in '.' (excluding env/, hidden files, and __pycach
         ./reviews/views/combined_view.py
         ./reviews/views/feed_view.py
         ./reviews/views/follow_view.py
+        ./reviews/views/logout_view.py
         ./reviews/views/publication_view.py
         ./reviews/views/review_view.py
         ./reviews/views/ticket_view.py

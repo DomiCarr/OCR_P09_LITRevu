@@ -125,3 +125,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'data'  # 'ticket_images/' fait partie du sous-dossier
 
+# URL to redirect unauthenticated users
+LOGIN_URL = '/'              # route to login_view
+LOGIN_REDIRECT_URL = '/feed/'  # after login, redirect to feed

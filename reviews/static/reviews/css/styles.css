@@ -7,6 +7,11 @@ body {
     /* cohérence globale */
 }
 
+body.no-menu header.header-bar .menu {
+    display: none;
+}
+
+
 /* Titles */
 h1,
 h2 {
@@ -70,6 +75,16 @@ header.header-bar .menu {
 
 header.header-bar .menu p {
     margin: 0;
+}
+
+.header-user {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.header-user:hover {
+    text-decoration: underline;
 }
 
 

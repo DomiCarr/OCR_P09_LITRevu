@@ -1,4 +1,4 @@
-Generated 2025-12-06 14:30:45
+Generated 2025-12-06 17:43:28
 
 
 
@@ -527,7 +527,6 @@ urlpatterns = [
     path('reviews/new/', create_review, name='review_create'),
     path('reviews/new/<int:ticket_id>/', create_review, name='review_create_ticket'),
     path("follow/", follow_view, name="follow"),
-
 ]
 
 # Serve uploaded media files during development
@@ -646,11 +645,64 @@ def logout_view(request):
 ===============================================================================
     reviews/views/feed_view.py 
 ===============================================================================
+# reviews/views/feed_view.py
+from itertools import chain
+from django.db.models import CharField, Value, Q
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from reviews.models import Review, Ticket, UserFollows
 
+
+def get_users_reviews(user):
+    """
+    Retourne les reviews que l'utilisateur peut voir :
+    - ses propres reviews
+    - les reviews des utilisateurs suivis
+    - les reviews en réponse à ses tickets
+    """
+    followed_users_ids = UserFollows.objects.filter(
+        user=user
+    ).values_list('followed_user', flat=True)
+
+    reviews = Review.objects.filter(
+        Q(author__id__in=followed_users_ids) |
+        Q(author=user) |
+        Q(ticket__user=user)
+    ).order_by('-created_at')
+
+    return reviews.annotate(content_type=Value('REVIEW', CharField()))
+
+
+def get_users_tickets(user):
+    """
+    Retourne les tickets que l'utilisateur peut voir :
+    - ses propres tickets
+    - tickets des utilisateurs suivis
+    """
+    followed_users_ids = UserFollows.objects.filter(
+        user=user
+    ).values_list('followed_user', flat=True)
+
+    tickets = Ticket.objects.filter(
+        Q(user__id__in=followed_users_ids) | Q(user=user)
+    ).order_by('-created_at')
+
+    return tickets.annotate(content_type=Value('TICKET', CharField()))
+
+
+@login_required
 def feed_view(request):
-    # TODO: implémenter la logique du flux
-    return render(request, "reviews/feed.html")
+    reviews = get_users_reviews(request.user)
+    tickets = get_users_tickets(request.user)
+
+    # Fusionne et trie par date de création
+    posts = sorted(
+        chain(reviews, tickets),
+        key=lambda post: post.created_at,
+        reverse=True
+    )
+
+    return render(request, 'reviews/feed.html', context={'posts': posts})
 
 
 
@@ -693,6 +745,20 @@ def follow_view(request):
         "abonnes": abonnes,
     }
     return render(request, "reviews/follow.html", context)
+
+
+
+===============================================================================
+    reviews/views/logout_view.py 
+===============================================================================
+# reviews/views/logout_view.py
+from django.contrib.auth import logout
+from django.shortcuts import redirect
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
 
 
 
@@ -865,12 +931,21 @@ def update_ticket(request, ticket_id):
     <link rel="stylesheet" href="{% static 'reviews/css/styles.css' %}">
 </head>
 
-<body>
+<body
+    class="{% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'signup' %}no-menu{% endif %}">
 
-    <header class="box header-bar">
+    <header class="header-bar">
         <h1>LITReview</h1>
-        <p class="header-user">{{ request.user.username }}</p>
+        <div class="menu">
+            <a href="{% url 'feed' %}">Flux</a>
+            <p>Posts</p>
+            <p>Abonnements</p>
+            <a class="header-user" href="{% url 'logout' %}">
+                Déconnecter {{ request.user.username }}
+            </a>
+        </div>
     </header>
+
 
 
     <main>
@@ -885,13 +960,47 @@ def update_ticket(request, ticket_id):
 ===============================================================================
     reviews/templates/reviews/feed.html 
 ===============================================================================
+{% extends 'reviews/base.html' %}
 
+{% block title %}LITReview - Flux{% endblock %}
+
+{% block content %}
+<main class="page">
+    <h2>Le flux</h2>
+
+    {% for post in posts %}
+    {% if post.content_type == 'TICKET' %}
+    <div class="box pub_line">
+        <div class="pub_desc">
+            <p><strong>{{ post.user.username }}</strong> a demandé une critique</p>
+            <p>Livre : {{ post.book_title }}</p>
+            <p>Description : {{ post.description }}</p>
+            <p>Date : {{ post.time_created }}</p>
+            <a class="btn" href="{% url 'review_create_ticket' post.id %}">Créer une critique</a>
+        </div>
+    </div>
+    {% elif post.content_type == 'REVIEW' %}
+    <div class="box pub_line">
+        <div class="pub_desc">
+            <p><strong>{{ post.user.username }}</strong> a posté une review</p>
+            <p>Titre : {{ post.title }}</p>
+            <p>Livre : {{ post.ticket.book_title }}</p>
+            <p>Date : {{ post.time_created }}</p>
+        </div>
+    </div>
+    {% endif %}
+    {% empty %}
+    <p>Aucun post à afficher.</p>
+    {% endfor %}
+</main>
+{% endblock %}
 
 
 ===============================================================================
     reviews/templates/reviews/follow.html 
 ===============================================================================
 {% extends "reviews/base.html" %}
+{% block title %}LITReview - Follow{% endblock %}
 {% block content %}
 <div class="page">
 
@@ -970,13 +1079,15 @@ def update_ticket(request, ticket_id):
 
     <div class="card">
         <div class="connection">
-            <iv class="tit_box">Connectez-vous</iv>
+            <div class="tit_box">Connectez-vous</div>
             <form method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
+                <button type="submit" class="btn">Se connecter</button>
             </form>
+
         </div>
-        <button type="submit" class="btn">Se connecter</button>
+
     </div>
 
 </div>
@@ -1164,6 +1275,11 @@ body {
     /* cohérence globale */
 }
 
+body.no-menu header.header-bar .menu {
+    display: none;
+}
+
+
 /* Titles */
 h1,
 h2 {
@@ -1195,21 +1311,48 @@ h2 {
     color: #000;
 }
 
-
-.header-bar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px 0;
-    border-bottom: 1px solid #ddd;
+header.header-bar {
     position: relative;
+    /* container for absolute menu */
+    width: 100%;
+    text-align: center;
+    /* center the title */
+    padding: 20px 30px;
+    border-bottom: 1px solid #ddd;
+    box-sizing: border-box;
 }
 
-.header-bar .header-user {
+header.header-bar h1 {
+    margin: 0;
+    display: inline-block;
+    /* needed for centering */
+}
+
+header.header-bar .menu {
     position: absolute;
-    right: 20px;
-    font-size: 14px;
-    color: #555;
+    right: 30px;
+    /* Position the top edge of the element at 50% of the parent height */
+    top: 50%;
+    /* Shift the element up by half of its own height to center it vertically */
+    transform: translateY(-50%);
+    display: flex;
+    gap: 20px;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+header.header-bar .menu p {
+    margin: 0;
+}
+
+.header-user {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.header-user:hover {
+    text-decoration: underline;
 }
 
 
@@ -1258,7 +1401,7 @@ main {
    Boxes
 --------------------------- */
 .box {
-    width: 600px;
+    width: 800px;
     max-width: 90%;
     background: #fff;
     padding: 30px;
@@ -1300,6 +1443,7 @@ main {
     padding: 20px;
     display: flex;
     flex-direction: column;
+    align-items: center;
     justify-content: center;
 }
 
@@ -1307,7 +1451,7 @@ main {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    width: 600px;
+    width: 800px;
     margin: 10px;
     background: #fff;
     padding: 30px;
@@ -1356,6 +1500,16 @@ Reviews
     display: inline-block;
     margin-right: 10px;
     cursor: pointer;
+}
+
+@media (max-width: 700px) {
+    header.header-bar .menu {
+        position: static;
+        transform: none;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        margin-top: 10px;
+    }
 }
 
 
@@ -1485,6 +1639,11 @@ body {
     /* cohérence globale */
 }
 
+body.no-menu header.header-bar .menu {
+    display: none;
+}
+
+
 /* Titles */
 h1,
 h2 {
@@ -1516,21 +1675,48 @@ h2 {
     color: #000;
 }
 
-
-.header-bar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px 0;
-    border-bottom: 1px solid #ddd;
+header.header-bar {
     position: relative;
+    /* container for absolute menu */
+    width: 100%;
+    text-align: center;
+    /* center the title */
+    padding: 20px 30px;
+    border-bottom: 1px solid #ddd;
+    box-sizing: border-box;
 }
 
-.header-bar .header-user {
+header.header-bar h1 {
+    margin: 0;
+    display: inline-block;
+    /* needed for centering */
+}
+
+header.header-bar .menu {
     position: absolute;
-    right: 20px;
-    font-size: 14px;
-    color: #555;
+    right: 30px;
+    /* Position the top edge of the element at 50% of the parent height */
+    top: 50%;
+    /* Shift the element up by half of its own height to center it vertically */
+    transform: translateY(-50%);
+    display: flex;
+    gap: 20px;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+header.header-bar .menu p {
+    margin: 0;
+}
+
+.header-user {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.header-user:hover {
+    text-decoration: underline;
 }
 
 
@@ -1579,7 +1765,7 @@ main {
    Boxes
 --------------------------- */
 .box {
-    width: 600px;
+    width: 800px;
     max-width: 90%;
     background: #fff;
     padding: 30px;
@@ -1621,6 +1807,7 @@ main {
     padding: 20px;
     display: flex;
     flex-direction: column;
+    align-items: center;
     justify-content: center;
 }
 
@@ -1628,7 +1815,7 @@ main {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    width: 600px;
+    width: 800px;
     margin: 10px;
     background: #fff;
     padding: 30px;
@@ -1677,6 +1864,16 @@ Reviews
     display: inline-block;
     margin-right: 10px;
     cursor: pointer;
+}
+
+@media (max-width: 700px) {
+    header.header-bar .menu {
+        position: static;
+        transform: none;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        margin-top: 10px;
+    }
 }
 
 

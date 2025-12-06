@@ -1,0 +1,34 @@
+{% extends 'reviews/base.html' %}
+
+{% block title %}LITReview - Flux{% endblock %}
+
+{% block content %}
+<main class="page">
+    <h2>Le flux</h2>
+
+    {% for post in posts %}
+    {% if post.content_type == 'TICKET' %}
+    <div class="box pub_line">
+        <div class="pub_desc">
+            <p><strong>{{ post.user.username }}</strong> a demandé une critique</p>
+            <p>Livre : {{ post.book_title }}</p>
+            <p>Description : {{ post.description }}</p>
+            <p>Date : {{ post.time_created }}</p>
+            <a class="btn" href="{% url 'review_create_ticket' post.id %}">Créer une critique</a>
+        </div>
+    </div>
+    {% elif post.content_type == 'REVIEW' %}
+    <div class="box pub_line">
+        <div class="pub_desc">
+            <p><strong>{{ post.user.username }}</strong> a posté une review</p>
+            <p>Titre : {{ post.title }}</p>
+            <p>Livre : {{ post.ticket.book_title }}</p>
+            <p>Date : {{ post.time_created }}</p>
+        </div>
+    </div>
+    {% endif %}
+    {% empty %}
+    <p>Aucun post à afficher.</p>
+    {% endfor %}
+</main>
+{% endblock %}

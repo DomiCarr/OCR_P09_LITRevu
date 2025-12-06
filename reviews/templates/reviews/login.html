@@ -12,13 +12,13 @@
 
     <div class="card">
         <div class="connection">
-            <iv class="tit_box">Connectez-vous</iv>
+            <div class="tit_box">Connectez-vous</div>
             <form method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
+                <button type="submit" class="btn">Se connecter</button>
             </form>
         </div>
-        <button type="submit" class="btn">Se connecter</button>
     </div>
 
 </div>

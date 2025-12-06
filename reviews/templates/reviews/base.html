@@ -9,15 +9,18 @@
     <link rel="stylesheet" href="{% static 'reviews/css/styles.css' %}">
 </head>
 
-<body>
+<body
+    class="{% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'signup' %}no-menu{% endif %}">
 
     <header class="header-bar">
         <h1>LITReview</h1>
         <div class="menu">
-            <p>Flux</p>
+            <a href="{% url 'feed' %}">Flux</a>
             <p>Posts</p>
             <p>Abonnements</p>
-            <p class="header-user">Deconnecter {{ request.user.username }}</p>
+            <a class="header-user" href="{% url 'logout' %}">
+                Déconnecter {{ request.user.username }}
+            </a>
         </div>
     </header>
 
