@@ -193,7 +193,8 @@ main {
     justify-content: center;
 }
 
-.pub_line {
+.pub_line,
+.post_line {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -256,4 +257,59 @@ Reviews
         justify-content: flex-end;
         margin-top: 10px;
     }
+}
+
+/* --------------------------
+post & feed
+--------------------------- */
+
+.post_line {
+    display: flex;
+    flex-direction: column;
+    width: 800px;
+    margin: 10px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.post_ticket,
+.post_review {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.post_desc {
+    flex: 1;
+}
+
+.post_date {
+    align-self: flex-start;
+    text-align: right;
+    margin-left: 20px;
+    font-size: 12px;
+}
+
+.post_btn {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    margin-top: 10px;
+}
+
+
+.stars {
+    display: inline-flex;
+}
+
+.star {
+    font-size: 22px;
+    color: white;
+    -webkit-text-stroke: 1px black;
+}
+
+.star.filled {
+    color: black;
 }

@@ -14,24 +14,78 @@
 
     {% for post in posts %}
     {% if post.content_type == 'TICKET' %}
-    <div class="box pub_line">
-        <div class="pub_desc">
-            <p><strong>{{ post.user.username }}</strong> a demandé une critique</p>
-            <p>Livre : {{ post.book_title }}</p>
-            <p>Description : {{ post.description }}</p>
-            <p>Date : {{ post.time_created }}</p>
+    TICKET TICKET TICKET TICKET
+    <div class="box post_line">
+        <div class="post_ticket">
+            <div class="post_desc">
+                {% if post.user == request.user %}
+                <p>Vous avez demandé une critique</p>
+                {% else %}
+                <p>{{ post.user.username }} a demandé une critique</p>
+                {% endif %}
+
+                <p>{{ post.title }}</p>
+                <p>{{ post.description }}</p>
+                {% if post.image %}
+                <img src="{{ post.image.url }}" width="200" alt="ticket image">
+                {% endif %}
+            </div>
+            <div class="post_date">
+                <p>{{ post.time_created }}</p>
+            </div>
+        </div>
+        <div class="post_btn">
             <a class="btn" href="{% url 'review_create_ticket' post.id %}">Créer une critique</a>
         </div>
     </div>
+
     {% elif post.content_type == 'REVIEW' %}
-    <div class="box pub_line">
-        <div class="pub_desc">
-            <p><strong>{{ post.user.username }}</strong> a posté une review</p>
-            <p>Titre : {{ post.title }}</p>
-            <p>Livre : {{ post.ticket.book_title }}</p>
-            <p>Date : {{ post.time_created }}</p>
+    REVIEW REVIEW REVIEW REVIEW
+    <div class="box post_line">
+        <div class="post_review">
+            <div class="post_desc">
+                {% if post.user == request.user %}
+                <p>Vous avez publié une critique</p>
+                {% else %}
+                <p>{{ post.user.username }} a publié une critique</p>
+                {% endif %}
+                <p>
+                    {{ post.titre }} –
+                    <span class="stars">
+                        <!-- Loop 5 times by iterating over the string "12345" -->
+                        {% for i in "12345" %}
+                        <!-- If the loop index (1–5) is less than or equal to the rating, show a filled star -->
+                        {% if forloop.counter <= post.note %} <span class="star filled">★</span>
+                    {% else %}
+                    <!-- Otherwise show an empty star (outline only) -->
+                    <span class="star">★</span>
+                    {% endif %}
+                    {% endfor %}
+                    </span>
+                </p>
+
+
+
+
+                <p>{{ post.commentaire }}</p>
+            </div>
+            <div class="post_date">
+                <p>{{ post.time_created }}</p>
+            </div>
+        </div>
+
+        <!-- Ticket associé -->
+        <div class="box post_ticket">
+            <div class="post_desc">
+                <p>{{ post.ticket.title }}</p>
+                <p>{{ post.ticket.description }}</p>
+                {% if post.ticket.image %}
+                <img src="{{ post.ticket.image.url }}" width="200" alt="ticket image">
+                {% endif %}
+            </div>
         </div>
     </div>
+
     {% endif %}
     {% empty %}
     <p>Aucun post à afficher.</p>
