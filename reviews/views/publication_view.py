@@ -1,3 +1,4 @@
+# reviews/views/pulication_view.py
 from django.shortcuts import render
 from reviews.models import Publication
 
