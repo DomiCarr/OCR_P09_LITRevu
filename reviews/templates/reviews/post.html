@@ -1,0 +1,70 @@
+{% extends 'reviews/base.html' %}
+
+{% block title %}LITReview - Mes posts{% endblock %}
+
+{% block content %}
+<main class="page">
+    <h2>Mes posts</h2>
+
+    {% for post in posts %}
+    {% if post.content_type == 'TICKET' %}
+    <div class="box post_line">
+        <div class="post_ticket">
+            <div class="post_desc">
+                <p>{{ post.title }}</p>
+                <p>{{ post.description }}</p>
+                {% if post.image %}
+                <img src="{{ post.image.url }}" width="200" alt="ticket image">
+                {% endif %}
+            </div>
+            <div class="post_date">
+                <p>{{ post.time_created }}</p>
+            </div>
+        </div>
+        <div class="post_btn">
+            <a class="btn" href="{% url 'ticket_edit' post.id %}">Modifier</a>
+            <a class="btn btn-danger" href="{% url 'ticket_delete' post.id %}">Supprimer</a>
+        </div>
+    </div>
+
+    {% elif post.content_type == 'REVIEW' %}
+    <div class="box post_line">
+        <div class="post_review">
+            <div class="post_desc">
+                <p>{{ post.titre }} –
+                    <span class="stars">
+                        {% for i in "12345" %}
+                        {% if forloop.counter <= post.note %} <span class="star filled">★</span>
+                    {% else %}<span class="star">★</span>{% endif %}
+                    {% endfor %}
+                    </span>
+                </p>
+                <p>{{ post.commentaire }}</p>
+            </div>
+            <div class="post_date">
+                <p>{{ post.time_created }}</p>
+            </div>
+        </div>
+
+        <!-- Linked ticket -->
+        <div class="box post_ticket">
+            <div class="post_desc">
+                <p>{{ post.ticket.title }}</p>
+                <p>{{ post.ticket.description }}</p>
+                {% if post.ticket.image %}
+                <img src="{{ post.ticket.image.url }}" width="200" alt="ticket image">
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="post_btn">
+            <a class="btn" href="{% url 'review_edit' post.id %}">Modifier</a>
+            <a class="btn btn-danger" href="{% url 'review_delete' post.id %}">Supprimer</a>
+        </div>
+    </div>
+    {% endif %}
+    {% empty %}
+    <p>Vous n'avez encore créé aucun post.</p>
+    {% endfor %}
+</main>
+{% endblock %}
