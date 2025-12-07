@@ -9,11 +9,11 @@
     <link rel="stylesheet" href="{% static 'reviews/css/styles.css' %}">
 </head>
 
-<body
-    class="{% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'signup' %}no-menu{% endif %}">
+<body>
 
     <header class="header-bar">
         <h1>LITReview</h1>
+        {% if request.user.is_authenticated %}
         <div class="menu">
             <a href="{% url 'feed' %}">Flux</a>
             <p>Posts</p>
@@ -22,9 +22,9 @@
                 Déconnecter {{ request.user.username }}
             </a>
         </div>
+        {% endif %}
+
     </header>
-
-
 
     <main>
         {% block content %}{% endblock %}
