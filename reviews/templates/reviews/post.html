@@ -22,7 +22,7 @@
             </div>
         </div>
         <div class="post_btn">
-            <a class="btn" href="{% url 'ticket_edit' post.id %}">Modifier</a>
+            <a class="btn" href="{% url 'ticket_update' post.id %}">Modifier</a>
             <a class="btn btn-danger" href="{% url 'ticket_delete' post.id %}">Supprimer</a>
         </div>
     </div>
@@ -58,7 +58,7 @@
         </div>
 
         <div class="post_btn">
-            <a class="btn" href="{% url 'review_edit' post.id %}">Modifier</a>
+            <a class="btn" href="{% url 'review_update' post.id %}">Modifier</a>
             <a class="btn btn-danger" href="{% url 'review_delete' post.id %}">Supprimer</a>
         </div>
     </div>

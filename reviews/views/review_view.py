@@ -1,7 +1,6 @@
-# reviews/views/revieww_view.py
+# reviews/views/review_view.py
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-
 from reviews.models import Ticket, Review
 from reviews.forms.ticket_form import TicketForm
 from reviews.forms.review_form import ReviewForm

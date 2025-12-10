@@ -33,8 +33,14 @@ class SignupForm(forms.ModelForm):
 # LoginForm: handles user login
 # -------------------------------------------------------------------
 class LoginForm(forms.Form):
+    # Standard text field for the username. By default, Django renders this
+    # as <input type="text">.
     username = forms.CharField(label="Nom d'utilisateur")
-    password = forms.CharField(label="Mot de passe",
-                               widget=forms.PasswordInput)
 
-
+    # Password field using PasswordInput widget. This widget renders the field
+    # as <input type="password">, so the browser masks the characters typed.
+    # It is required for any field that contains sensitive data.
+    password = forms.CharField(
+        label="Mot de passe",
+        widget=forms.PasswordInput
+    )

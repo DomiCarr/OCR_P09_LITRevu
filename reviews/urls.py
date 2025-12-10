@@ -5,13 +5,15 @@ from django.conf.urls.static import static
 from .views.auth_view import login_view, signup_view, logout_view
 from .views.publication_view import list_publications
 from reviews.views.ticket_view import create_ticket
-from reviews.views.ticket_update import ticket_update, ticket_delete
 from reviews.views.feed_view import feed_view
 from reviews.views.review_view import create_review
 from reviews.views.review_update import review_update
 from reviews.views.review_delete import review_delete
 from reviews.views.follow_view import follow_view
 from reviews.views.post_view import post_view
+from reviews.views.ticket_update import ticket_update
+from reviews.views.ticket_delete import ticket_delete
+
 
 urlpatterns = [
     path('', login_view, name='login'),
