@@ -20,8 +20,9 @@
             <p>Description:</p>
             {{ form.description }}
 
-            <img id="imagePreview" width="200" {% if edit_mode and ticket.image %} src="{{ ticket.image.url }}"
-                style="display:block;" {% else %} style="display:none;" {% endif %} alt="Preview">
+            <img id="imagePreview" width="200" {% if ticket and ticket.image %} src="{{ ticket.image.url }}"
+                alt="{{ ticket.title }}" style="display:block;" {% else %} alt="Image du ticket" style="display:none;"
+                {% endif %}>
 
             <input type="file" id="image" name="image" style="display:none;">
             <label for="image" class="btn">Télécharger Fichier</label>

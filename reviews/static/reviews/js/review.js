@@ -52,9 +52,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (file) {
                 preview.src = URL.createObjectURL(file);
                 preview.style.display = "block";
+                preview.alt = titleInput?.value || "Image du ticket";
             } else {
                 preview.src = "";
                 preview.style.display = "none";
+                preview.alt = "";
             }
             checkFields();
         });

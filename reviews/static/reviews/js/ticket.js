@@ -13,24 +13,34 @@ document.addEventListener('DOMContentLoaded', () => {
         submitBtn.disabled = !(okTitle && okDesc && okImg);
     }
 
+    // Initial alt update if editing
+    if (preview.src && preview.src.trim() !== "") {
+        preview.alt = titleInput.value || "Ticket image";
+    }
+
     // Initial check
     checkFields();
 
-    // Sur modification des champs texte
-    titleInput.addEventListener("input", checkFields);
+    // On title change
+    titleInput.addEventListener("input", () => {
+        preview.alt = titleInput.value || "Ticket image"; // Update alt dynamically
+        checkFields();
+    });
+
+    // On description change
     descInput.addEventListener("input", checkFields);
 
-    // Sur sélection d’une image
+    // On image selection
     inputImage.addEventListener("change", () => {
         const file = inputImage.files[0];
         if (file) {
-            // Affiche la preview
             preview.src = URL.createObjectURL(file);
             preview.style.display = "block";
+            preview.alt = titleInput.value || "Ticket image";
         } else {
-            // Pas de fichier => cache
             preview.src = "";
             preview.style.display = "none";
+            preview.alt = "";
         }
         checkFields();
     });

@@ -14,7 +14,7 @@
                 <p>{{ post.title }}</p>
                 <p>{{ post.description }}</p>
                 {% if post.image %}
-                <img src="{{ post.image.url }}" width="200" alt="ticket image">
+                <img src="{{ post.image.url }}" width="200" alt="{{ post.title }}">
                 {% endif %}
             </div>
             <div class="post_date">
@@ -52,12 +52,12 @@
                 <p>{{ post.ticket.title }}</p>
                 <p>{{ post.ticket.description }}</p>
                 {% if post.ticket.image %}
-                <img src="{{ post.ticket.image.url }}" width="200" alt="ticket image">
+                <img src="{{ post.ticket.image.url }}" width="200" alt="{{ post.title }}">
                 {% endif %}
             </div>
         </div>
 
-        <div class="post_btn">
+        <div class=" post_btn">
             <a class="btn" href="{% url 'review_update' post.id %}">Modifier</a>
             <a class="btn btn-danger" href="{% url 'review_delete' post.id %}">Supprimer</a>
         </div>
