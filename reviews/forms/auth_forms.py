@@ -26,7 +26,9 @@ class SignupForm(forms.ModelForm):
         password = cleaned_data.get("password")
         password2 = cleaned_data.get("password2")
         if password != password2:
-            raise forms.ValidationError("Les mots de passe ne correspondent pas.")
+            raise forms.ValidationError(
+                "Les mots de passe ne correspondent pas."
+                )
 
 
 # -------------------------------------------------------------------

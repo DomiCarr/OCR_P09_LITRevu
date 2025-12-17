@@ -15,7 +15,10 @@ class Ticket(models.Model):
     description = models.TextField(max_length=2048, blank=True)
 
     # User who created the ticket, linked to Django's built-in user model
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
 
     # Optional image attached to the ticket
     image = models.ImageField(
@@ -51,7 +54,10 @@ class Review(models.Model):
     commentaire = models.TextField(max_length=8192, blank=True)
 
     # User who wrote the review
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
 
     # Automatically set the creation date/time
     time_created = models.DateTimeField(auto_now_add=True)
@@ -102,7 +108,10 @@ class Publication(models.Model):
     title = models.CharField(max_length=256)
     author = models.CharField(max_length=128)
     pub_type = models.CharField(max_length=10, choices=PUB_TYPES)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
     image = models.URLField(
         default="https://dummyimage.com/150x150/cccccc/000000.png&text=No+Image"
     )
@@ -110,3 +119,4 @@ class Publication(models.Model):
 
     def __str__(self):
         return f"{self.title} ({self.pub_type})"
+

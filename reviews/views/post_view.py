@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from reviews.models import Review, Ticket
 
+
 @login_required
 def post_view(request):
     """
@@ -11,12 +12,20 @@ def post_view(request):
     Reviews include the linked ticket.
     """
     # User's own reviews
-    reviews = Review.objects.filter(user=request.user).order_by('-time_created')\
+    reviews = (
+        Review.objects.
+        filter(user=request.user)
+        .order_by('-time_created')
         .annotate(content_type=Value('REVIEW', CharField()))
+        )
 
     # User's own tickets
-    tickets = Ticket.objects.filter(user=request.user).order_by('-time_created')\
+    tickets = (
+        Ticket.objects
+        .filter(user=request.user)
+        .order_by('-time_created')
         .annotate(content_type=Value('TICKET', CharField()))
+        )
 
     # Merge and sort by creation date
     posts = sorted(

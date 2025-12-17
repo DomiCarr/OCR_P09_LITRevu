@@ -24,12 +24,15 @@ urlpatterns = [
 
     # Tickets
     path('tickets/new/', create_ticket, name='ticket_create'),
-    path('tickets/update/<int:ticket_id>/', ticket_update, name='ticket_update'),
-    path('tickets/delete/<int:ticket_id>/', ticket_delete, name='ticket_delete'),
+    path('tickets/update/<int:ticket_id>/',
+         ticket_update, name='ticket_update'),
+    path('tickets/delete/<int:ticket_id>/',
+         ticket_delete, name='ticket_delete'),
 
     # Reviews
     path('reviews/new/', create_review, name='review_create'),
-    path('reviews/new/<int:ticket_id>/', create_review, name='review_create_ticket'),
+    path('reviews/new/<int:ticket_id>/',
+         create_review, name='review_create_ticket'),
     path('reviews/<int:pk>/edit/', review_update, name='review_update'),
     path('reviews/<int:pk>/delete/', review_delete, name='review_delete'),
 
@@ -40,4 +43,7 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(
+        settings.MEDIA_URL,
+        document_root=settings.MEDIA_ROOT
+    )

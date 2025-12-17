@@ -1,6 +1,6 @@
 # reviews/views/feed_view.py
 from itertools import chain
-from django.db.models import CharField, Value, Q, Count
+from django.db.models import CharField, Value, Q
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from reviews.models import Review, Ticket, UserFollows
@@ -13,13 +13,18 @@ def get_users_tickets(user):
     - tickets from followed users
     - excludes tickets that already have at least one review
     """
-    # Filter UserFollows table for all rows where the follower is the given user
+    # Filter UserFollows table for all rows where the follower
+    # is the given user
     # This returns a queryset of UserFollows objects
     user_follows_qs = UserFollows.objects.filter(user=user)
 
     # Extract the 'followed_user' field values as a flat list of IDs
-    # flat=True converts the queryset to a simple list instead of a list of tuples
-    followed_users_ids = user_follows_qs.values_list('followed_user', flat=True)
+    # flat=True converts the queryset
+    # to a simple list instead of a list of tuples
+    followed_users_ids = (
+        user_follows_qs
+        .values_list('followed_user', flat=True)
+        )
 
     # Combine the list of followed user IDs with the current user's ID
     # list(followed_users_ids) converts the queryset to a Python list

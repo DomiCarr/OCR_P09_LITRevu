@@ -16,4 +16,10 @@ def review_update(request, pk):
             return redirect('post')  # matches the posts list view
     else:
         form = ReviewForm(instance=review)
-    return render(request, 'reviews/review_create.html', {'review_form': form, 'ticket': review.ticket})
+    return render(
+        request,
+        'reviews/review_create.html',
+        {
+            'review_form': form,
+            'ticket': review.ticket}
+        )
