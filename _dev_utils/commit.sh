@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# CDOM-2025-08-17-1235
+# commit.sh
+
 # Robust commit script: git add, commit with WIP message, push to main branch
 
 set -euo pipefail
