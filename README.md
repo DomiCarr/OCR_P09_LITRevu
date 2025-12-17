@@ -168,14 +168,22 @@ sqlparse==0.5.3
 
 ---
 
-### 🏃 Run the Django Development Server
+### 🏃 Prepare the database and run the Django Development Server
 
 From the project root:
 
 ```bash
+# If python doesn't work, use python3
+
+# Apply all migrations to initialize the database
+python manage.py migrate
+
+# (Optional) Create a superuser for Django admin
+# You will be prompted to enter username, email, and password
+python manage.py createsuperuser
+
+# Run the Django development server
 python manage.py runserver
-# If python doesn't work, use python3:
-python3 manage.py runserver
 
 ```
 
@@ -194,9 +202,9 @@ To ensure code quality and compliance with PEP8 standards, this project uses **F
 You can generate a detailed linting report by running the following command from the root of the project:
 
 ```bash
-python -m flake8 src/ --format=html --htmldir=flake8_rapport
+python -m flake8 reviews/ --format=html --htmldir=flake8_rapport
 # If python doesn't work, use python3:
-python3 -m flake8 src/ --format=html --htmldir=flake8_rapport
+python3 -m flake8 reviews/ --format=html --htmldir=flake8_rapport
 ```
 
 This will create an HTML report in the `flake8_rapport/` directory.
