@@ -1,6 +1,6 @@
-# ♟️ ChessCenter
+# 📚 LITRevu
 
-**ChessCenter** is a Python application designed to manage chess tournaments, including player registration, tournament creation, match results, and rankings.
+**LITRevu** is a Django application designed to manage literary reviews. Users can request critiques for books or articles, post their own reviews, and follow other users to see their activity in a personalized feed.
 
 ---
 
@@ -90,8 +90,8 @@ LITRevu/
 Clone the repository from GitHub:
 
 ```bash
-git clone https://github.com/DomiCarr/OCR_P04_ChessCenter
-cd OCR_P04_ChessCenter
+git clone https://github.com/DomiCarr/OCR_P09_LITRevu
+cd OCR_P09_LITRevu
 ```
 
 ### 🛠️ Set up the virtual environment
@@ -152,27 +152,36 @@ pip freeze
 Expected output includes:
 
 ```text
+asgiref==3.11.0
+Django==5.2.8
 flake8==7.3.0
 flake8-html==0.4.3
 Jinja2==3.1.6
 MarkupSafe==3.0.2
 mccabe==0.7.0
+pillow==12.0.0
 pycodestyle==2.14.0
 pyflakes==3.4.0
 Pygments==2.19.2
+sqlparse==0.5.3
 ```
 
 ---
 
-## ▶️ Launch the Application
+### 🏃 Run the Django Development Server
+
+From the project root:
 
 ```bash
-cd src
-
-python main.py
+python manage.py runserver
 # If python doesn't work, use python3:
-python3 main.py
+python3 manage.py runserver
+
 ```
+
+🌐 Access the application
+
+Open your browser and go to http://127.0.0.1:8000/
 
 ---
 
