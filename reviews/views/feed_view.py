@@ -79,13 +79,8 @@ def feed_view(request):
     - combines reviews and tickets
     - sorts by creation date (most recent first)
     """
-    print(f"DEBUG: feed_view called for user {request.user}")
     reviews = get_users_reviews(request.user)
     tickets = get_users_tickets(request.user)
-
-    print(f"DEBUG: {reviews.count()} reviews found")
-    print(f"DEBUG: {tickets.count()} tickets found")
-    print(f"DEBUG: Tickets IDs = {[t.id for t in tickets]}")
 
     # Merge the querysets and sort by time_created
     posts = sorted(
@@ -93,7 +88,5 @@ def feed_view(request):
         key=lambda post: post.time_created,
         reverse=True
     )
-
-    print(f"DEBUG: total posts after merge = {len(posts)}")
 
     return render(request, 'reviews/feed.html', context={'posts': posts})
