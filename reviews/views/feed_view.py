@@ -12,6 +12,10 @@ def get_users_tickets(user):
     - user's own tickets
     - tickets from followed users
     - excludes tickets that already have at least one review
+    Args:
+        user (User): The user for whom to retrieve tickets.
+    Returns:
+        QuerySet: Annotated queryset of Ticket instances.
     """
     # Filter UserFollows table for all rows where the follower
     # is the given user
@@ -37,6 +41,11 @@ def get_users_tickets(user):
     # Exclude tickets that already have at least one associated review
     # review__isnull=False checks if the reverse ForeignKey from Review exists
     tickets_qs = tickets_qs.exclude(review__isnull=False)
+
+    # Annotate tickets so they can be identified in the feed template
+    tickets_qs = tickets_qs.annotate(
+        content_type=Value('TICKET', CharField())
+    )
 
     # Return the final queryset of tickets
     return tickets_qs
@@ -70,8 +79,13 @@ def feed_view(request):
     - combines reviews and tickets
     - sorts by creation date (most recent first)
     """
+    print(f"DEBUG: feed_view called for user {request.user}")
     reviews = get_users_reviews(request.user)
     tickets = get_users_tickets(request.user)
+
+    print(f"DEBUG: {reviews.count()} reviews found")
+    print(f"DEBUG: {tickets.count()} tickets found")
+    print(f"DEBUG: Tickets IDs = {[t.id for t in tickets]}")
 
     # Merge the querysets and sort by time_created
     posts = sorted(
@@ -79,5 +93,7 @@ def feed_view(request):
         key=lambda post: post.time_created,
         reverse=True
     )
+
+    print(f"DEBUG: total posts after merge = {len(posts)}")
 
     return render(request, 'reviews/feed.html', context={'posts': posts})
